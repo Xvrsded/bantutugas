@@ -19,6 +19,70 @@
         </div>
     </section>
 
+    <!-- Trust & Introduction Section -->
+    <section class="py-5">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-4 mb-lg-0">
+                    <h2 style="color: var(--primary-color); font-weight: 700; margin-bottom: 1.5rem;">
+                        Mengapa Memilih bantutugas?
+                    </h2>
+                    <p style="font-size: 1.1rem; color: #555; line-height: 1.8; margin-bottom: 1.5rem;">
+                        Kami adalah platform terpercaya yang telah membantu ribuan pelajar dan profesional mencapai tujuan akademik dan teknologi mereka. Dengan tim ahli berpengalaman, layanan berkualitas tinggi, dan komitmen terhadap kepuasan pelanggan, kami siap menjadi mitra terbaik Anda.
+                    </p>
+                    <ul style="list-style: none; padding: 0; margin-bottom: 2rem;">
+                        <li style="margin-bottom: 1rem; font-size: 1rem; color: #333;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--success-color); margin-right: 0.8rem;"></i>
+                            <strong>Aman & Terpercaya</strong> - Transaksi aman dengan berbagai metode pembayaran
+                        </li>
+                        <li style="margin-bottom: 1rem; font-size: 1rem; color: #333;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--success-color); margin-right: 0.8rem;"></i>
+                            <strong>Tim Profesional</strong> - Ahli berpengalaman siap membantu Anda
+                        </li>
+                        <li style="margin-bottom: 1rem; font-size: 1rem; color: #333;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--success-color); margin-right: 0.8rem;"></i>
+                            <strong>Hasil Berkualitas</strong> - Kepuasan pelanggan adalah prioritas utama kami
+                        </li>
+                        <li style="margin-bottom: 1rem; font-size: 1rem; color: #333;">
+                            <i class="bi bi-check-circle-fill" style="color: var(--success-color); margin-right: 0.8rem;"></i>
+                            <strong>Respons Cepat</strong> - Dukungan 24/7 untuk semua kebutuhan Anda
+                        </li>
+                    </ul>
+                    <p style="font-style: italic; color: var(--secondary-color); font-weight: 600; font-size: 1.05rem;">
+                        "Investasi terbaik adalah investasi pada diri sendiri. Mulai sekarang dan raih kesuksesan Anda!"
+                    </p>
+                </div>
+                <div class="col-lg-6">
+                    <div style="background: linear-gradient(135deg, var(--accent-color) 0%, var(--secondary-color) 100%); border-radius: 15px; padding: 2.5rem; color: white; text-align: center; box-shadow: 0 8px 24px rgba(30, 58, 95, 0.2);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">
+                            <i class="bi bi-star-fill"></i>
+                        </div>
+                        <h4 style="margin-bottom: 1.5rem; font-weight: 700; font-size: 1.3rem;">
+                            Bergabunglah Dengan Ribuan Pelanggan Puas
+                        </h4>
+                        <p style="font-size: 1.05rem; margin-bottom: 2rem; line-height: 1.8;">
+                            Dari pelajar hingga profesional, semua telah merasakan manfaat layanan kami. Saatnya Anda merasakan pengalaman yang sama!
+                        </p>
+                        <div style="display: flex; justify-content: space-around; margin-top: 2rem; padding-top: 2rem; border-top: 1px solid rgba(255,255,255,0.3);">
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700;">1000+</div>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">Pelanggan Puas</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700;">100%</div>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">Kepuasan</div>
+                            </div>
+                            <div>
+                                <div style="font-size: 2rem; font-weight: 700;">24/7</div>
+                                <div style="font-size: 0.9rem; margin-top: 0.5rem;">Dukungan</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
     <!-- Highlight Services -->
     <section class="py-5 bg-white">
         <div class="container">

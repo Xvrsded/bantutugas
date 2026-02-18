@@ -234,8 +234,7 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <img src="{{ asset('logo.svg') }}" alt="bantutugas" style="height: 35px; margin-right: 10px;">
-            <span>Admin Panel</span>
+            Admin Panel
         </div>
         <ul class="sidebar-menu">
             <li>

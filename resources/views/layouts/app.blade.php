@@ -218,8 +218,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
-                <img src="{{ asset('logo.svg') }}" alt="bantutugas" style="height: 40px; margin-right: 10px;">
-                <span>bantutugas</span>
+                bantutugas
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -280,10 +279,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
-                    <h5>
-                        <img src="{{ asset('logo.svg') }}" alt="bantutugas" style="height: 30px; margin-right: 8px; display: inline-block;">
-                        bantutugas
-                    </h5>
+                    <h5>bantutugas</h5>
                     <p>Menyediakan layanan bantuan akademik dan teknologi berkualitas untuk kesuksesan Anda.</p>
                 </div>
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
