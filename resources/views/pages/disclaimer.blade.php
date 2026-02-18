@@ -20,7 +20,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="bi bi-info-circle"></i> Layanan Pendampingan Akademik</h5>
                             <p class="card-text">
-                                Academic & Tech Support menyediakan layanan <strong>pendampingan dan konsultasi akademik</strong>, bukan layanan menulis atau mengerjakan tugas untuk diserahkan langsung sebagai hasil karya pribadi Anda. Semua layanan yang kami berikan dirancang untuk membantu, membimbing, dan meningkatkan pemahaman Anda terhadap materi akademik.
+                                bantutugas menyediakan layanan <strong>pendampingan dan konsultasi akademik</strong>, bukan layanan menulis atau mengerjakan tugas untuk diserahkan langsung sebagai hasil karya pribadi Anda. Semua layanan yang kami berikan dirancang untuk membantu, membimbing, dan meningkatkan pemahaman Anda terhadap materi akademik.
                             </p>
                         </div>
                     </div>
@@ -81,7 +81,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="bi bi-exclamation-octagon"></i> Pembatasan Tanggung Jawab</h5>
                             <p class="card-text">
-                                Academic & Tech Support tidak bertanggung jawab atas:
+                                bantutugas tidak bertanggung jawab atas:
                             </p>
                             <ul>
                                 <li>Nilai/grade yang diterima dari hasil layanan kami</li>

@@ -6,8 +6,8 @@
     <!-- Hero Section -->
     <section class="hero">
         <div class="container">
-            <h1>Academic & Tech Support</h1>
-            <p class="tagline">Solusi Lengkap untuk Bantuan Akademik dan Teknologi Anda</p>
+            <h1>bantutugas</h1>
+            <p class="tagline">Platform Jasa Akademik dan Konsultasi Teknologi Terpercaya</p>
             <div class="mt-4">
                 <a href="{{ route('services') }}" class="btn btn-light btn-lg me-3">
                     <i class="bi bi-briefcase"></i> Jelajahi Layanan

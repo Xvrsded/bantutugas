@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - Academic & Tech Support</title>
+    <title>@yield('title') - bantutugas</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -219,7 +219,7 @@
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
                 <i class="bi bi-book-half"></i>
-                Academic & Tech Support
+                bantutugas
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -280,7 +280,7 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
-                    <h5><i class="bi bi-book-half"></i> Academic & Tech Support</h5>
+                    <h5><i class="bi bi-book-half"></i> bantutugas</h5>
                     <p>Menyediakan layanan bantuan akademik dan teknologi berkualitas untuk kesuksesan Anda.</p>
                 </div>
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
@@ -302,15 +302,15 @@
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
                     <h5>Hubungi Kami</h5>
                     <p>
-                        <i class="bi bi-whatsapp"></i> <a href="https://wa.me/6281234567890" target="_blank">+62 812-3456-7890</a>
+                        <i class="bi bi-whatsapp"></i> <a href="https://wa.me/6288991796535" target="_blank">+62 88991796535</a>
                     </p>
                     <p>
-                        <i class="bi bi-envelope"></i> <a href="mailto:support@academictechsupport.com">support@academictechsupport.com</a>
+                        <i class="bi bi-envelope"></i> <a href="mailto:support@bantutugas.com">support@bantutugas.com</a>
                     </p>
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; {{ now()->year }} Academic & Tech Support. All rights reserved. | <a href="{{ route('disclaimer') }}">Disclaimer</a></p>
+                <p>&copy; {{ now()->year }} bantutugas. All rights reserved. | <a href="{{ route('disclaimer') }}">Disclaimer</a></p>
             </div>
         </div>
     </footer>

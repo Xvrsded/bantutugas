@@ -36,7 +36,7 @@
                     </form>
 
                     <hr>
-                    <p class="text-center small">Demo: admin@academictechsupport.com / password123</p>
+                    <p class="text-center small">Demo: admin@bantutugas.com / password123</p>
                 </div>
             </div>
         </div>

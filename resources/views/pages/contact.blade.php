@@ -26,8 +26,8 @@
                             <div class="mb-4">
                                 <h6><i class="bi bi-whatsapp text-success"></i> WhatsApp</h6>
                                 <p class="text-muted">
-                                    <a href="https://wa.me/6281234567890" target="_blank" class="text-decoration-none">
-                                        +62 812-3456-7890
+                                    <a href="https://wa.me/6288991796535" target="_blank" class="text-decoration-none">
+                                        +62 88991796535
                                     </a>
                                 </p>
                                 <small class="text-muted">Response time: Kurang dari 1 jam</small>
@@ -36,8 +36,8 @@
                             <div class="mb-4">
                                 <h6><i class="bi bi-envelope text-danger"></i> Email</h6>
                                 <p class="text-muted">
-                                    <a href="mailto:support@academictechsupport.com" class="text-decoration-none">
-                                        support@academictechsupport.com
+                                    <a href="mailto:support@bantutugas.com" class="text-decoration-none">
+                                        support@bantutugas.com
                                     </a>
                                 </p>
                                 <small class="text-muted">Response time: 1-2 jam</small>
