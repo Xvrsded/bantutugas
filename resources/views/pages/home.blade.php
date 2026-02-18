@@ -124,107 +124,71 @@
                 <div class="payment-slider">
                     <!-- OVO -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%); position: relative;">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="50" height="50">
-                                <circle cx="30" cy="30" r="25" fill="white" opacity="0.95"/>
-                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#550099">OVO</text>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/OVO_Logo.svg/1024px-OVO_Logo.svg.png" alt="OVO" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
 
                     <!-- GoPay -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <g fill="white">
-                                    <circle cx="18" cy="20" r="8"/>
-                                    <path d="M35 20 C35 15 40 12 45 12 C50 12 53 15 53 20"/>
-                                    <path d="M18 35 C18 28 24 22 30 22 C36 22 42 28 42 35"/>
-                                </g>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Gopay_Logo.svg/1024px-Gopay_Logo.svg.png" alt="GoPay" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
 
                     <!-- Dana -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <circle cx="30" cy="30" r="22" fill="white" opacity="0.95"/>
-                                <text x="30" y="39" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#0099ff">D</text>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/DANA_logo.svg/1024px-DANA_logo.svg.png" alt="Dana" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Dana</p>
                     </div>
 
                     <!-- LinkAja -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <rect x="8" y="15" width="44" height="30" rx="4" fill="white" opacity="0.95"/>
-                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#ff5722">LinkAja</text>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/LinkAja_logo.png/1024px-LinkAja_logo.png" alt="LinkAja" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">LinkAja</p>
                     </div>
 
                     <!-- Mandiri -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <rect x="10" y="10" width="40" height="40" rx="3" fill="white" opacity="0.95"/>
-                                <circle cx="30" cy="30" r="12" fill="#e74c3c"/>
-                                <path d="M30 25 L35 35 L25 35 Z" fill="#e74c3c"/>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Bank_Mandiri_2016.svg/1024px-Bank_Mandiri_2016.svg.png" alt="Mandiri" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Mandiri</p>
                     </div>
 
                     <!-- SeaBank -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #1e90ff 0%, #1873cc 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <ellipse cx="30" cy="30" rx="22" ry="20" fill="white" opacity="0.95"/>
-                                <path d="M20 28 Q30 22 40 28" fill="none" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/>
-                                <path d="M20 34 Q30 28 40 34" fill="none" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Seabank_logo.png/800px-Seabank_logo.png" alt="SeaBank" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">SeaBank</p>
                     </div>
 
                     <!-- Bank Jago -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #00a8e8 0%, #0088cc 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <path d="M30 12 L48 26 L48 48 L12 48 L12 26 Z" fill="white" opacity="0.95"/>
-                                <path d="M22 32 L22 42 M38 32 L38 42" stroke="#00a8e8" stroke-width="2" stroke-linecap="round"/>
-                                <rect x="28" y="38" width="4" height="4" fill="#00a8e8"/>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Bank_Jago_logo.svg/1024px-Bank_Jago_logo.svg.png" alt="Bank Jago" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Bank Jago</p>
                     </div>
 
                     <!-- Duplicate for seamless loop -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="50" height="50">
-                                <circle cx="30" cy="30" r="25" fill="white" opacity="0.95"/>
-                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#550099">OVO</text>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/OVO_Logo.svg/1024px-OVO_Logo.svg.png" alt="OVO" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
 
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
-                                <g fill="white">
-                                    <circle cx="18" cy="20" r="8"/>
-                                    <path d="M35 20 C35 15 40 12 45 12 C50 12 53 15 53 20"/>
-                                    <path d="M18 35 C18 28 24 22 30 22 C36 22 42 28 42 35"/>
-                                </g>
-                            </svg>
+                        <div class="payment-logo">
+                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Gopay_Logo.svg/1024px-Gopay_Logo.svg.png" alt="GoPay" style="max-width: 100%; max-height: 100%; object-fit: contain;">
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
@@ -266,7 +230,7 @@
                 }
 
                 .payment-logo {
-                    background: linear-gradient(135deg, #f0f4f8 0%, #d9e2ec 100%);
+                    background: white;
                     width: 80px;
                     height: 80px;
                     border-radius: 10px;
@@ -275,9 +239,8 @@
                     justify-content: center;
                     margin-bottom: 0.5rem;
                     transition: all 0.3s ease;
-                    font-weight: bold;
-                    color: #1e3a5f;
-                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+                    padding: 5px;
                 }
 
                 .payment-item:hover .payment-logo {
