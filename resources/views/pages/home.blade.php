@@ -125,7 +125,7 @@
                     <!-- OVO -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="{{ asset('pembayaran/Ovo.png') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Ovo.jpg') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
@@ -181,7 +181,7 @@
                     <!-- Duplicate for seamless loop -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="{{ asset('pembayaran/Ovo.png') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Ovo.jpg') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
