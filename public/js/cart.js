@@ -68,6 +68,13 @@ class ShoppingCart {
         const totalItems = this.getTotalItems();
         const totalPrice = this.getTotalPrice();
 
+        // Show/hide cart widget based on items
+        if (totalItems > 0) {
+            cartWidget.style.display = 'block';
+        } else {
+            cartWidget.style.display = 'none';
+        }
+
         // Update badge
         if (cartCount) {
             cartCount.textContent = totalItems;

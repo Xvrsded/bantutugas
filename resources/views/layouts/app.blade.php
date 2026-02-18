@@ -372,6 +372,7 @@
             right: 2rem;
             z-index: 999;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            display: none; /* Hidden by default, will show when items added */
         }
 
         .cart-toggle {
