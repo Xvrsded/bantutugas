@@ -76,7 +76,7 @@
                             </h2>
                             <div id="process1" class="accordion-collapse collapse show" data-bs-parent="#processAccordion">
                                 <div class="accordion-body">
-                                    <p>Kunjungi halaman <a href="{{ route('services') }}">Layanan</a> atau <a href="{{ route('pricing') }}">Harga</a> untuk melihat semua layanan yang tersedia. Setiap layanan memiliki deskripsi lengkap dan informasi harga.</p>
+                                    <p>Kunjungi halaman <a href="{{ route('services') }}">Layanan</a> untuk melihat semua layanan yang tersedia. Setiap layanan memiliki deskripsi lengkap dan informasi harga dengan berbagai paket pilihan.</p>
                                 </div>
                             </div>
                         </div>

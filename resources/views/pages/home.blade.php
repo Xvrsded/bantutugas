@@ -400,6 +400,7 @@
             <div class="row">
                 <div class="col-lg-8 mx-auto">
                     <form id="feedbackForm" style="background: white; padding: 2.5rem; border-radius: 15px; box-shadow: 0 4px 16px rgba(0,0,0,0.1);">
+                        @csrf
                         <div class="mb-4">
                             <label for="feedbackName" class="form-label" style="font-weight: 600; color: var(--primary-color);">Nama Anda</label>
                             <input type="text" class="form-control" id="feedbackName" name="name" placeholder="Masukkan nama Anda" required style="border-radius: 8px; padding: 0.75rem; border: 1px solid #ddd;">
