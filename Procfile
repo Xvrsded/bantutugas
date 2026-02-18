@@ -1,1 +1,1 @@
-web: php -d display_errors=off -S 0.0.0.0:${PORT:-8080} -t public/
+web: cd $PWD && php -S 0.0.0.0:${PORT:-8080} -t public/
