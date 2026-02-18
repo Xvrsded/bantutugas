@@ -30,10 +30,18 @@
                                 <h5 class="card-title text-center">{{ $service->name }}</h5>
                                 <p class="card-text">{{ $service->description }}</p>
                                 
-                                @if ($service->features)
+                                @php
+                                    $features = $service->features;
+                                    if (is_string($features)) {
+                                        $features = json_decode($features, true);
+                                    }
+                                    $features = is_array($features) ? $features : [];
+                                @endphp
+                                
+                                @if (!empty($features))
                                     <h6 class="mt-3 mb-2">Fitur:</h6>
                                     <ul class="small">
-                                        @foreach ($service->features as $feature)
+                                        @foreach ($features as $feature)
                                             <li>{{ $feature }}</li>
                                         @endforeach
                                     </ul>
@@ -81,10 +89,18 @@
                                 <h5 class="card-title text-center">{{ $service->name }}</h5>
                                 <p class="card-text">{{ $service->description }}</p>
                                 
-                                @if ($service->features)
+                                @php
+                                    $features = $service->features;
+                                    if (is_string($features)) {
+                                        $features = json_decode($features, true);
+                                    }
+                                    $features = is_array($features) ? $features : [];
+                                @endphp
+                                
+                                @if (!empty($features))
                                     <h6 class="mt-3 mb-2">Fitur:</h6>
                                     <ul class="small">
-                                        @foreach ($service->features as $feature)
+                                        @foreach ($features as $feature)
                                             <li>{{ $feature }}</li>
                                         @endforeach
                                     </ul>
