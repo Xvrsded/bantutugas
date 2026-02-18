@@ -1,5 +1,0 @@
-[build]
-buildCommand = "composer install && npm install && npm run build && php artisan config:cache && php artisan route:cache && php artisan view:cache"
-
-[start]
-startCommand = "php -d display_errors=off -S 0.0.0.0:${PORT:-8080} -t public/"
