@@ -18,6 +18,8 @@ class Order extends Model
         'description',
         'deadline',
         'budget',
+        'quantity',
+        'payment_method',
         'attachment',
         'status',
         'notes',

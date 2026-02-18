@@ -64,4 +64,83 @@ class OrderController extends Controller
         
         $order->update(['is_notified' => true]);
     }
+
+    public function processCheckout(Request $request)
+    {
+        $validated = $request->validate([
+            'customer_name' => 'required|string|max:255',
+            'customer_email' => 'required|email|max:255',
+            'customer_whatsapp' => 'required|string|max:20',
+            'order_notes' => 'nullable|string|max:1000',
+            'payment_method' => 'required|string',
+            'cart_items' => 'required|json',
+        ]);
+
+        // Parse cart items
+        $cartItems = json_decode($validated['cart_items'], true);
+        
+        if (empty($cartItems)) {
+            return back()->with('error', 'Keranjang kosong!');
+        }
+
+        // Create orders for each service in cart
+        $orders = [];
+        foreach ($cartItems as $item) {
+            $service = Service::find($item['id']);
+            
+            if (!$service) {
+                continue;
+            }
+
+            $order = Order::create([
+                'client_name' => $validated['customer_name'],
+                'client_email' => $validated['customer_email'],
+                'client_phone' => $validated['customer_whatsapp'],
+                'service_id' => $service->id,
+                'project_title' => $service->name . ' - Order dari Cart',
+                'description' => $validated['order_notes'] ?? 'Order melalui keranjang belanja',
+                'deadline' => now()->addDays(7), // Default 7 days
+                'budget' => $item['price'] * $item['quantity'],
+                'quantity' => $item['quantity'],
+                'payment_method' => $validated['payment_method'],
+                'status' => 'pending',
+            ]);
+
+            $orders[] = $order;
+        }
+
+        // Send WhatsApp notification for all orders
+        $this->sendCheckoutNotification($orders, $validated);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Pesanan berhasil dibuat! Kami akan menghubungi Anda melalui WhatsApp.',
+            'order_count' => count($orders)
+        ]);
+    }
+
+    private function sendCheckoutNotification($orders, $customerData)
+    {
+        $message = "Halo Admin! Pesanan baru dari keranjang:\n\n";
+        $message .= "Pelanggan: {$customerData['customer_name']}\n";
+        $message .= "Email: {$customerData['customer_email']}\n";
+        $message .= "WhatsApp: {$customerData['customer_whatsapp']}\n";
+        $message .= "Metode Pembayaran: {$customerData['payment_method']}\n";
+        $message .= "\nDaftar Layanan:\n";
+        
+        $total = 0;
+        foreach ($orders as $order) {
+            $message .= "- {$order->service->name} (Qty: {$order->quantity}) - Rp " . number_format($order->budget, 0, ',', '.') . "\n";
+            $total += $order->budget;
+        }
+        
+        $message .= "\nTotal: Rp " . number_format($total, 0, ',', '.') . "\n";
+        $message .= "\nCatatan: " . ($customerData['order_notes'] ?? '-');
+
+        // TODO: Implement actual WhatsApp sending
+        // Mark all orders as notified
+        foreach ($orders as $order) {
+            $order->update(['is_notified' => true]);
+        }
+    }
 }

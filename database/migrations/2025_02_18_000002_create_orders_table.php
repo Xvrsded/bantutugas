@@ -21,6 +21,8 @@ return new class extends Migration
             $table->longText('description');
             $table->dateTime('deadline')->nullable();
             $table->decimal('budget', 12, 2)->nullable();
+            $table->integer('quantity')->default(1);
+            $table->string('payment_method')->nullable();
             $table->string('attachment')->nullable();
             $table->enum('status', ['pending', 'accepted', 'in_progress', 'completed', 'rejected'])->default('pending');
             $table->longText('notes')->nullable();

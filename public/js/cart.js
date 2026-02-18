@@ -67,18 +67,41 @@ class ShoppingCart {
 
         const totalItems = this.getTotalItems();
         const totalPrice = this.getTotalPrice();
+        const wasHidden = cartWidget.style.display === 'none' || !cartWidget.style.display;
 
-        // Show/hide cart widget based on items
+        // Show/hide cart widget based on items with animation
         if (totalItems > 0) {
-            cartWidget.style.display = 'block';
+            if (wasHidden) {
+                cartWidget.style.display = 'block';
+                // Trigger animation
+                setTimeout(() => {
+                    cartWidget.classList.add('cart-appear');
+                }, 10);
+            }
+            
+            // Animate badge on count change
+            if (cartCount) {
+                const oldCount = parseInt(cartCount.textContent) || 0;
+                cartCount.textContent = totalItems;
+                cartCount.style.display = 'flex';
+                
+                if (oldCount !== totalItems && totalItems > 0) {
+                    cartCount.classList.remove('badge-bounce');
+                    void cartCount.offsetWidth; // Trigger reflow
+                    cartCount.classList.add('badge-bounce');
+                }
+            }
         } else {
-            cartWidget.style.display = 'none';
+            cartWidget.classList.add('cart-disappear');
+            setTimeout(() => {
+                cartWidget.style.display = 'none';
+                cartWidget.classList.remove('cart-appear', 'cart-disappear');
+            }, 300);
         }
 
-        // Update badge
-        if (cartCount) {
-            cartCount.textContent = totalItems;
-            cartCount.style.display = totalItems > 0 ? 'flex' : 'none';
+        // Update badge display
+        if (cartCount && totalItems === 0) {
+            cartCount.style.display = 'none';
         }
 
         // Render items
@@ -130,18 +153,8 @@ class ShoppingCart {
             return;
         }
 
-        // Buat form untuk checkout
-        const form = document.createElement('form');
-        form.method = 'POST';
-        form.action = '/checkout';
-        form.innerHTML = `
-            <input type="hidden" name="_token" value="${document.querySelector('meta[name="csrf-token"]').content}">
-            <input type="hidden" name="cart_items" value='${JSON.stringify(this.items)}'>
-        `;
-        
-        document.body.appendChild(form);
-        form.submit();
-        document.body.removeChild(form);
+        // Redirect to checkout page
+        window.location.href = '/checkout';
     }
 
     clearCart() {

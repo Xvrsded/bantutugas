@@ -81,4 +81,9 @@ class PageController extends Controller
     {
         return view('pages.disclaimer');
     }
+
+    public function checkout()
+    {
+        return view('pages.checkout');
+    }
 }

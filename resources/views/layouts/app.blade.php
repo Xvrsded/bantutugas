@@ -394,8 +394,12 @@
 
         .cart-toggle:hover {
             background-color: var(--secondary-color);
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(5deg);
             box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
+        }
+
+        .cart-toggle:active {
+            transform: scale(0.95);
         }
 
         .cart-count {
@@ -412,6 +416,56 @@
             justify-content: center;
             font-weight: 700;
             font-size: 0.85rem;
+        }
+
+        /* Cart Widget Animations */
+        @keyframes slideUp {
+            from {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                transform: translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100px);
+                opacity: 0;
+            }
+        }
+
+        @keyframes bounce {
+            0%, 100% {
+                transform: scale(1);
+            }
+            25% {
+                transform: scale(1.3);
+            }
+            50% {
+                transform: scale(0.9);
+            }
+            75% {
+                transform: scale(1.15);
+            }
+        }
+
+        .cart-widget.cart-appear {
+            animation: slideUp 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+        }
+
+        .cart-widget.cart-disappear {
+            animation: slideDown 0.3s ease-in;
+        }
+
+        .cart-count.badge-bounce {
+            animation: bounce 0.5s ease;
         }
 
         .cart-panel {

@@ -21,6 +21,10 @@ Route::get('/order/create/{service}', [OrderController::class, 'create'])->name(
 Route::post('/order', [OrderController::class, 'store'])->name('order.store');
 Route::get('/order/success/{order}', [OrderController::class, 'success'])->name('order.success');
 
+// Checkout Routes
+Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
+Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
+
 // Admin Routes
 Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
