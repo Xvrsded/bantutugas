@@ -1,0 +1,75 @@
+<?php
+
+namespace App\Http\Controllers;
+
+use App\Models\Order;
+use App\Models\Portfolio;
+use App\Models\Service;
+use Illuminate\Http\Request;
+
+class PageController extends Controller
+{
+    public function home()
+    {
+        $services = Service::where('is_active', true)->take(6)->get();
+        $portfolios = Portfolio::where('is_featured', true)->take(3)->get();
+        return view('pages.home', compact('services', 'portfolios'));
+    }
+
+    public function services()
+    {
+        $academicServices = Service::where('category', 'like', 'academic%')
+            ->where('is_active', true)
+            ->get();
+        
+        $techServices = Service::where('category', 'like', 'tech%')
+            ->where('is_active', true)
+            ->get();
+
+        return view('pages.services', compact('academicServices', 'techServices'));
+    }
+
+    public function pricing()
+    {
+        $services = Service::where('is_active', true)->get();
+        return view('pages.pricing', compact('services'));
+    }
+
+    public function portfolio()
+    {
+        $portfolios = Portfolio::orderBy('is_featured', 'desc')
+            ->orderBy('created_at', 'desc')
+            ->get();
+        $categories = ['academic', 'pcb', 'iot', 'webmonitoring', 'programming'];
+        return view('pages.portfolio', compact('portfolios', 'categories'));
+    }
+
+    public function howToOrder()
+    {
+        return view('pages.how-to-order');
+    }
+
+    public function contact()
+    {
+        return view('pages.contact');
+    }
+
+    public function sendContact(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email',
+            'subject' => 'required|string|max:255',
+            'message' => 'required|string|min:10'
+        ]);
+
+        // TODO: Send email or store inquiry
+        // For now, redirect with success message
+        return redirect()->route('contact')->with('success', 'Pesan Anda telah dikirim!');
+    }
+
+    public function disclaimer()
+    {
+        return view('pages.disclaimer');
+    }
+}

@@ -1,13 +1,40 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# 🎓 Academic & Tech Support Platform
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+> **Platform profesional berbasis Laravel untuk layanan pendampingan akademik dan konsultasi teknologi**
 
-## About Laravel
+[![Laravel Version](https://img.shields.io/badge/Laravel-12-FF2D20?style=flat-square)](https://laravel.com)
+[![PHP Version](https://img.shields.io/badge/PHP-8.2+-777BB4?style=flat-square)](https://php.net)
+[![Bootstrap Version](https://img.shields.io/badge/Bootstrap-5.3-7952B3?style=flat-square)](https://getbootstrap.com)
+[![License](https://img.shields.io/badge/License-Proprietary-red?style=flat-square)](#)
+[![Status](https://img.shields.io/badge/Status-Production%20Ready-green?style=flat-square)](#)
+
+---
+
+## 📱 Live Features
+
+### 🌐 Public Website (11 Pages)
+- ✅ **Homepage** - Hero section with featured services
+- ✅ **Services** - 11 layanan (7 academic + 4 technical)
+- ✅ **Pricing** - Transparent pricing table
+- ✅ **Portfolio** - Project showcase with filtering
+- ✅ **How to Order** - 6-step guide dengan Q&A
+- ✅ **Contact** - Form + WhatsApp integration
+- ✅ **Disclaimer** - Legal information
+- ✅ **Order System** - Complete order form with validation
+- ✅ **Authentication** - Login/Register system
+
+### 👨‍💼 Admin Dashboard
+- ✅ **Dashboard** - 7 KPI statistics
+- ✅ **Order Management** - Full CRUD operations
+- ✅ **Status Tracking** - 5 status types with timeline
+- ✅ **Order Details** - Comprehensive order view
+- ✅ **Analytics** - Status breakdown & insights
+
+---
+
+## 🚀 Quick Start
+
+### Installation (3 Steps)
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
