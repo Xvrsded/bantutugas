@@ -125,7 +125,7 @@
                     <!-- OVO -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/OVO_Logo.svg/1024px-OVO_Logo.svg.png" alt="OVO" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Ovo.png') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
@@ -133,7 +133,7 @@
                     <!-- GoPay -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Gopay_Logo.svg/1024px-Gopay_Logo.svg.png" alt="GoPay" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Gopay.png') }}" alt="GoPay" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
@@ -141,23 +141,23 @@
                     <!-- Dana -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d0/DANA_logo.svg/1024px-DANA_logo.svg.png" alt="Dana" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Dana.jpg') }}" alt="Dana" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Dana</p>
                     </div>
 
-                    <!-- LinkAja -->
+                    <!-- ShopeePay -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/LinkAja_logo.png/1024px-LinkAja_logo.png" alt="LinkAja" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Shopepay.png') }}" alt="ShopeePay" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
-                        <p class="payment-name">LinkAja</p>
+                        <p class="payment-name">ShopeePay</p>
                     </div>
 
                     <!-- Mandiri -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3e/Bank_Mandiri_2016.svg/1024px-Bank_Mandiri_2016.svg.png" alt="Mandiri" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Mandiri.png') }}" alt="Mandiri" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Mandiri</p>
                     </div>
@@ -165,7 +165,7 @@
                     <!-- SeaBank -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/en/thumb/0/0b/Seabank_logo.png/800px-Seabank_logo.png" alt="SeaBank" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Seabank.png') }}" alt="SeaBank" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">SeaBank</p>
                     </div>
@@ -173,7 +173,7 @@
                     <!-- Bank Jago -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/ae/Bank_Jago_logo.svg/1024px-Bank_Jago_logo.svg.png" alt="Bank Jago" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Jago.png') }}" alt="Bank Jago" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">Bank Jago</p>
                     </div>
@@ -181,14 +181,14 @@
                     <!-- Duplicate for seamless loop -->
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/58/OVO_Logo.svg/1024px-OVO_Logo.svg.png" alt="OVO" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Ovo.png') }}" alt="OVO" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
 
                     <div class="payment-item">
                         <div class="payment-logo">
-                            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Gopay_Logo.svg/1024px-Gopay_Logo.svg.png" alt="GoPay" style="max-width: 100%; max-height: 100%; object-fit: contain;">
+                            <img src="{{ asset('pembayaran/Gopay.png') }}" alt="GoPay" style="max-width: 90%; max-height: 90%; object-fit: contain;">
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
