@@ -23,7 +23,7 @@
                                 <i class="bi bi-person-fill"></i> Informasi Pemesan
                             </h4>
 
-                            <form id="checkout-form" method="POST" action="{{ route('checkout.process') }}">
+                            <form id="checkout-form" method="POST" action="{{ route('checkout.process') }}" enctype="multipart/form-data">
                                 @csrf
                                 <input type="hidden" name="cart_items" id="cart-items-input">
 
@@ -44,77 +44,110 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label class="form-label fw-bold">Detail/Catatan Pesanan</label>
-                                    <textarea name="notes" class="form-control" rows="4" placeholder="Tuliskan detail pesanan, requirement, atau catatan khusus..."></textarea>
+                                    <label class="form-label fw-bold">Detail/Catatan Pesanan <span class="text-danger">*</span></label>
+                                    <textarea name="notes" class="form-control" rows="4" required placeholder="Jelaskan detail tugas Anda secara lengkap...&#10;Contoh: Tugas Kalkulus 2 tentang integral, 10 soal, deadline 3 hari lagi"></textarea>
                                 </div>
 
-                                <hr class="my-4">
+                                <!-- Parameter Kalkulasi Harga Otomatis -->
+                                <div class="alert alert-primary">
+                                    <h6 class="alert-heading"><i class="bi bi-calculator me-2"></i>Parameter Kalkulasi Harga</h6>
+                                    <p class="mb-0 small">Isi parameter di bawah untuk mendapatkan estimasi harga otomatis</p>
+                                </div>
 
-                                <h5 class="mb-3" style="color: var(--primary-color);">
-                                    <i class="bi bi-credit-card"></i> Metode Pembayaran
-                                </h5>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Jenis Soal/Tugas <span class="text-danger">*</span></label>
+                                    <select name="question_type" id="question-type" class="form-select" required>
+                                        <option value="">Pilih jenis...</option>
+                                        <option value="multiple_choice">Pilihan Ganda (Multiple Choice)</option>
+                                        <option value="essay">Esai / Uraian</option>
+                                        <option value="calculation">Hitungan / Matematika</option>
+                                        <option value="project">Project / Tugas Besar</option>
+                                        <option value="coding">Coding / Pemrograman</option>
+                                    </select>
+                                </div>
 
-                                <div class="payment-methods">
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="ovo" value="ovo" required>
-                                        <label class="form-check-label" for="ovo">
-                                            <img src="{{ asset('pembayaran/Ovo.jpg') }}" alt="OVO" style="height: 30px;">
-                                            OVO
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Mata Pelajaran <span class="text-danger">*</span></label>
+                                    <input type="text" name="subject" id="subject" class="form-control" required placeholder="Contoh: Matematika, Fisika, Pemrograman">
+                                    <small class="text-muted">Tulis mata pelajaran atau topik tugas</small>
+                                </div>
+
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Jumlah Soal/Halaman <span class="text-danger">*</span></label>
+                                    <input type="number" name="question_count" id="question-count" class="form-control" required min="1" placeholder="Contoh: 10">
+                                </div>
+
+                                <div class="mb-3">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="checkbox" name="needs_explanation" id="needs-explanation" value="1">
+                                        <label class="form-check-label fw-bold" for="needs-explanation">
+                                            Butuh Penjelasan Detail
                                         </label>
                                     </div>
+                                    <small class="text-muted">Centang jika membutuhkan langkah-langkah penyelesaian lengkap</small>
+                                </div>
 
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="gopay" value="gopay">
-                                        <label class="form-check-label" for="gopay">
-                                            <img src="{{ asset('pembayaran/Gopay.png') }}" alt="GoPay" style="height: 30px;">
-                                            GoPay
-                                        </label>
-                                    </div>
+                                <div class="mb-3">
+                                    <label class="form-label fw-bold">Deadline <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" name="deadline" id="deadline" class="form-control" required>
+                                    <small class="text-muted">Kapan tugas harus selesai?</small>
+                                </div>
 
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="dana" value="dana">
-                                        <label class="form-check-label" for="dana">
-                                            <img src="{{ asset('pembayaran/Dana.jpg') }}" alt="Dana" style="height: 30px;">
-                                            Dana
-                                        </label>
+                                <!-- Preview Harga Otomatis -->
+                                <div id="price-preview" class="card border-primary mb-4" style="display: none;">
+                                    <div class="card-body">
+                                        <h6 class="text-primary"><i class="bi bi-cash-stack me-2"></i>Estimasi Harga Otomatis</h6>
+                                        <div class="row text-center g-3">
+                                            <div class="col-6">
+                                                <small class="text-muted">Tingkat Kesulitan</small>
+                                                <div class="fw-bold" id="difficulty-badge"></div>
+                                            </div>
+                                            <div class="col-6">
+                                                <small class="text-muted">Skor Kesulitan</small>
+                                                <div class="fw-bold" id="difficulty-score">0</div>
+                                            </div>
+                                            <div class="col-12">
+                                                <hr class="my-2">
+                                                <h4 class="text-primary mb-0" id="price-display">Rp 0</h4>
+                                                <small class="text-muted">Harga per unit: <span id="price-per-unit">Rp 0</span></small>
+                                            </div>
+                                        </div>
+                                        <small class="text-muted d-block mt-2">
+                                            <i class="bi bi-info-circle me-1"></i>
+                                            Harga dapat disesuaikan setelah review file tugas
+                                        </small>
                                     </div>
+                                </div>
 
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="shopee" value="shopeepay">
-                                        <label class="form-check-label" for="shopee">
-                                            <img src="{{ asset('pembayaran/Shopepay.png') }}" alt="ShopeePay" style="height: 30px;">
-                                            ShopeePay
-                                        </label>
+                                <div class="mb-4">
+                                    <label class="form-label fw-bold">Upload File Tugas <span class="text-danger">*</span></label>
+                                    <input type="file" name="attachment" class="form-control" id="file-input" required accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar">
+                                    <small class="text-muted">Format: PDF, DOC, DOCX, JPG, PNG, ZIP, RAR (Max: 10MB)</small>
+                                    <div id="file-info" class="mt-2" style="display: none;">
+                                        <div class="alert alert-success d-flex align-items-center mb-0">
+                                            <i class="bi bi-file-earmark-check me-2"></i>
+                                            <span id="file-name"></span>
+                                            <button type="button" class="btn-close ms-auto" onclick="clearFile()"></button>
+                                        </div>
                                     </div>
+                                </div>
 
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="mandiri" value="bank_mandiri">
-                                        <label class="form-check-label" for="mandiri">
-                                            <img src="{{ asset('pembayaran/Mandiri.png') }}" alt="Bank Mandiri" style="height: 30px;">
-                                            Bank Mandiri
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="seabank" value="seabank">
-                                        <label class="form-check-label" for="seabank">
-                                            <img src="{{ asset('pembayaran/Seabank.png') }}" alt="SeaBank" style="height: 30px;">
-                                            SeaBank
-                                        </label>
-                                    </div>
-
-                                    <div class="form-check payment-option">
-                                        <input class="form-check-input" type="radio" name="payment_method" id="jago" value="bank_jago">
-                                        <label class="form-check-label" for="jago">
-                                            <img src="{{ asset('pembayaran/Jago.png') }}" alt="Bank Jago" style="height: 30px;">
-                                            Bank Jago
-                                        </label>
-                                    </div>
+                                <div class="alert alert-info">
+                                    <h6 class="alert-heading"><i class="bi bi-info-circle me-2"></i>Proses Selanjutnya:</h6>
+                                    <ol class="mb-0 ps-3">
+                                        <li>Sistem menghitung harga otomatis berdasarkan parameter</li>
+                                        <li>Anda kirim detail + file tugas</li>
+                                        <li>Kami review file (jika diperlukan adjustment harga)</li>
+                                        <li>Kami hubungi via WhatsApp untuk konfirmasi</li>
+                                        <li>Anda setuju? Lakukan pembayaran</li>
+                                        <li>Pengerjaan dimulai!</li>
+                                    </ol>
+                                    <small class="text-muted"><em>Harga otomatis sangat akurat. Adjustment hanya jika file berbeda dari parameter.</em></small>
                                 </div>
 
                                 <div class="d-grid gap-2 mt-4">
-                                    <button type="submit" class="btn btn-primary btn-lg">
-                                        <i class="bi bi-check-circle"></i> Proses Pembayaran
+                                    <button type="submit" class="btn btn-success btn-lg">
+                                        <i class="bi bi-send"></i> Kirim Pesanan
                                     </button>
                                     <a href="{{ route('home') }}" class="btn btn-outline-secondary">
                                         <i class="bi bi-arrow-left"></i> Kembali Belanja
@@ -139,23 +172,15 @@
                             <hr>
 
                             <div class="d-flex justify-content-between mb-2">
-                                <span>Subtotal:</span>
-                                <strong id="summary-subtotal">Rp 0</strong>
-                            </div>
-                            <div class="d-flex justify-content-between mb-2">
-                                <span>Biaya Admin:</span>
-                                <strong>Rp 0</strong>
+                                <span>Harga Kalkulasi Otomatis:</span>
+                                <strong id="summary-subtotal" style="color: var(--primary-color);">Rp 0</strong>
                             </div>
                             <hr>
-                            <div class="d-flex justify-content-between">
-                                <h5 class="mb-0">Total:</h5>
-                                <h5 class="mb-0" style="color: var(--primary-color);" id="summary-total">Rp 0</h5>
-                            </div>
-
-                            <div class="alert alert-info mt-3">
+                            <div class="alert alert-success mb-0">
                                 <small>
-                                    <i class="bi bi-info-circle"></i>
-                                    Setelah checkout, Anda akan menerima instruksi pembayaran via WhatsApp
+                                    <i class="bi bi-check-circle me-2"></i>
+                                    <strong>Harga Dihitung Otomatis!</strong><br>
+                                    Sistem menghitung berdasarkan parameter objektif. Hanya disesuaikan jika file tidak sesuai deskripsi.
                                 </small>
                             </div>
                         </div>
@@ -227,6 +252,32 @@
     </style>
 
     <script>
+        // File upload handling
+        document.addEventListener('DOMContentLoaded', function() {
+            const fileInput = document.getElementById('file-input');
+            if (fileInput) {
+                fileInput.addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        // Check file size (10MB)
+                        if (file.size > 10 * 1024 * 1024) {
+                            alert('Ukuran file terlalu besar! Maksimal 10MB');
+                            e.target.value = '';
+                            return;
+                        }
+                        
+                        document.getElementById('file-name').textContent = file.name + ' (' + (file.size / 1024).toFixed(2) + ' KB)';
+                        document.getElementById('file-info').style.display = 'block';
+                    }
+                });
+            }
+        });
+
+        function clearFile() {
+            document.getElementById('file-input').value = '';
+            document.getElementById('file-info').style.display = 'none';
+        }
+
         // Wait for cart to be fully loaded
         function initCheckout() {
             // Get cart from localStorage directly
@@ -249,7 +300,6 @@
             // Populate order summary
             const summaryDiv = document.getElementById('order-summary');
             const subtotalEl = document.getElementById('summary-subtotal');
-            const totalEl = document.getElementById('summary-total');
 
             let html = '';
             let total = 0;
@@ -268,9 +318,7 @@
             });
 
             summaryDiv.innerHTML = html;
-
             subtotalEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
-            totalEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
 
             // Set cart items to hidden input
             document.getElementById('cart-items-input').value = JSON.stringify(items);
@@ -280,9 +328,206 @@
             // Initialize checkout
             initCheckout();
 
+            // Real-time price calculation
+            const priceCalculator = {
+                basePrices: {
+                    'multiple_choice': 5000,
+                    'essay': 15000,
+                    'calculation': 12000,
+                    'project': 50000,
+                    'coding': 75000
+                },
+                
+                weights: {
+                    questionType: {
+                        'multiple_choice': 10,
+                        'essay': 30,
+                        'calculation': 25,
+                        'project': 50,
+                        'coding': 60
+                    },
+                    subjectComplexity: {
+                        'low': 5,
+                        'medium': 15,
+                        'high': 25
+                    },
+                    quantity: {
+                        '1-5': 5,
+                        '6-10': 10,
+                        '11-20': 15,
+                        '21+': 20
+                    },
+                    explanation: {
+                        'no': 0,
+                        'yes': 15
+                    },
+                    deadline: {
+                        'relaxed': 0,
+                        'normal': 10,
+                        'urgent': 25,
+                        'very_urgent': 40
+                    }
+                },
+                
+                multipliers: {
+                    'easy': 1.0,
+                    'medium': 1.5,
+                    'hard': 2.2
+                },
+
+                getSubjectComplexity(subject) {
+                    const subjectLower = subject.toLowerCase();
+                    const high = ['kalkulus', 'statistika', 'pemrograman', 'coding', 'algoritma', 'fisika kuantum', 'kimia organik'];
+                    const medium = ['fisika', 'kimia', 'matematika sma', 'akuntansi', 'ekonomi', 'biologi'];
+                    
+                    for (let keyword of high) {
+                        if (subjectLower.includes(keyword)) return 'high';
+                    }
+                    for (let keyword of medium) {
+                        if (subjectLower.includes(keyword)) return 'medium';
+                    }
+                    return 'low';
+                },
+
+                getQuantityRange(count) {
+                    if (count >= 21) return '21+';
+                    if (count >= 11) return '11-20';
+                    if (count >= 6) return '6-10';
+                    return '1-5';
+                },
+
+                getDeadlineUrgency(hours) {
+                    if (hours < 24) return 'very_urgent';
+                    if (hours <= 48) return 'urgent';
+                    if (hours <= 168) return 'normal';
+                    return 'relaxed';
+                },
+
+                getDifficultyLevel(score) {
+                    if (score >= 67) return 'hard';
+                    if (score >= 34) return 'medium';
+                    return 'easy';
+                },
+
+                calculate(questionType, subject, questionCount, needsExplanation, deadlineHours) {
+                    let score = 0;
+
+                    // Score dari jenis soal
+                    score += this.weights.questionType[questionType] || 0;
+
+                    // Score dari kompleksitas pelajaran
+                    const complexity = this.getSubjectComplexity(subject);
+                    score += this.weights.subjectComplexity[complexity];
+
+                    // Score dari jumlah
+                    const qtyRange = this.getQuantityRange(questionCount);
+                    score += this.weights.quantity[qtyRange];
+
+                    // Score dari penjelasan
+                    score += needsExplanation ? this.weights.explanation.yes : this.weights.explanation.no;
+
+                    // Score dari deadline
+                    const urgency = this.getDeadlineUrgency(deadlineHours);
+                    score += this.weights.deadline[urgency];
+
+                    // Pastikan max 100
+                    score = Math.min(score, 100);
+
+                    // Tentukan level
+                    const level = this.getDifficultyLevel(score);
+
+                    // Hitung harga
+                    const basePrice = this.basePrices[questionType] || 10000;
+                    const multiplier = this.multipliers[level];
+                    const pricePerUnit = basePrice * multiplier;
+                    const totalPrice = pricePerUnit * questionCount;
+                    
+                    // Bulatkan ke ribuan
+                    const finalPrice = Math.ceil(totalPrice / 1000) * 1000;
+                    const roundedPricePerUnit = Math.ceil(pricePerUnit / 1000) * 1000;
+
+                    return {
+                        score: score,
+                        level: level,
+                        basePrice: basePrice,
+                        multiplier: multiplier,
+                        pricePerUnit: roundedPricePerUnit,
+                        finalPrice: finalPrice
+                    };
+                }
+            };
+
+            // Update price display
+            function updatePriceDisplay() {
+                const questionType = document.getElementById('question-type').value;
+                const subject = document.getElementById('subject').value;
+                const questionCount = parseInt(document.getElementById('question-count').value) || 0;
+                const needsExplanation = document.getElementById('needs-explanation').checked;
+                const deadlineInput = document.getElementById('deadline').value;
+
+                // Cek apakah semua field terisi
+                if (!questionType || !subject || questionCount === 0 || !deadlineInput) {
+                    document.getElementById('price-preview').style.display = 'none';
+                    return;
+                }
+
+                // Hitung deadline hours
+                const deadlineDate = new Date(deadlineInput);
+                const now = new Date();
+                const deadlineHours = Math.max(0, (deadlineDate - now) / (1000 * 60 * 60));
+
+                // Kalkulasi harga
+                const result = priceCalculator.calculate(questionType, subject, questionCount, needsExplanation, deadlineHours);
+
+                // Update display
+                document.getElementById('price-preview').style.display = 'block';
+                document.getElementById('difficulty-score').textContent = result.score + '/100';
+                
+                const badgeColors = {
+                    'easy': 'success',
+                    'medium': 'warning',
+                    'hard': 'danger'
+                };
+                const badgeText = {
+                    'easy': 'Mudah',
+                    'medium': 'Sedang',
+                    'hard': 'Sulit'
+                };
+                
+                document.getElementById('difficulty-badge').innerHTML = 
+                    `<span class="badge bg-${badgeColors[result.level]}">${badgeText[result.level]}</span>`;
+                
+                document.getElementById('price-display').textContent = 
+                    'Rp ' + new Intl.NumberFormat('id-ID').format(result.finalPrice);
+                
+                document.getElementById('price-per-unit').textContent = 
+                    'Rp ' + new Intl.NumberFormat('id-ID').format(result.pricePerUnit);
+                
+                // Update sidebar summary with calculated price
+                document.getElementById('summary-subtotal').textContent = 
+                    'Rp ' + new Intl.NumberFormat('id-ID').format(result.finalPrice);
+            }
+
+            // Add event listeners for real-time calculation
+            ['question-type', 'subject', 'question-count', 'needs-explanation', 'deadline'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', updatePriceDisplay);
+                    element.addEventListener('input', updatePriceDisplay);
+                }
+            });
+
             // Handle form submission
             document.getElementById('checkout-form').addEventListener('submit', function(e) {
                 e.preventDefault();
+                
+                // Validate file upload
+                const fileInput = document.getElementById('file-input');
+                if (!fileInput.files.length) {
+                    alert('Mohon upload file tugas terlebih dahulu!');
+                    fileInput.focus();
+                    return;
+                }
                 
                 const formData = new FormData(this);
                 
@@ -290,7 +535,7 @@
                 const submitBtn = this.querySelector('button[type="submit"]');
                 const originalText = submitBtn.innerHTML;
                 submitBtn.disabled = true;
-                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
+                submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Mengirim...';
 
                 // Submit via AJAX
                 fetch('{{ route("checkout.process") }}', {
@@ -307,19 +552,29 @@
                         localStorage.removeItem('bantutugas_cart');
                         
                         // Show success message
-                        alert('Pesanan berhasil dibuat! Kami akan menghubungi Anda via WhatsApp segera.');
+                        alert('✅ Pesanan Berhasil Dikirim!\n\n' +
+                              'Kami sudah terima:\n' +
+                              '✓ Data Anda\n' +
+                              '✓ Detail tugas\n' +
+                              '✓ File tugas\n\n' +
+                              'Selanjutnya:\n' +
+                              '1. Kami review file (maks 2 jam)\n' +
+                              '2. Tentukan harga PASTI\n' +
+                              '3. Hubungi WhatsApp Anda\n' +
+                              '4. Anda setuju? Bayar & selesai!\n\n' +
+                              'Terima kasih! 😊');
                         
                         // Redirect to home
                         window.location.href = '{{ route("home") }}';
                     } else {
-                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                        alert(data.message || 'Terjadi kesalahan. Silakan coba lagi.');
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalText;
                     }
                 })
                 .catch(error => {
                     console.error('Error:', error);
-                    alert('Terjadi kesalahan. Silakan coba lagi.');
+                    alert('Terjadi kesalahan saat mengirim. Silakan coba lagi.');
                     submitBtn.disabled = false;
                     submitBtn.innerHTML = originalText;
                 });

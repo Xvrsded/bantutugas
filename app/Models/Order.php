@@ -23,12 +23,33 @@ class Order extends Model
         'attachment',
         'status',
         'notes',
-        'is_notified'
+        'is_notified',
+        // Parameter Kalkulasi
+        'question_type',
+        'subject',
+        'question_count',
+        'needs_explanation',
+        'deadline_hours',
+        // Hasil Kalkulasi
+        'difficulty_score',
+        'difficulty_level',
+        'base_price',
+        'multiplier',
+        'calculated_price',
+        'final_price',
+        'price_overridden',
+        'price_adjustment_reason'
     ];
 
     protected $casts = [
         'deadline' => 'datetime',
-        'is_notified' => 'boolean'
+        'is_notified' => 'boolean',
+        'needs_explanation' => 'boolean',
+        'price_overridden' => 'boolean',
+        'base_price' => 'decimal:2',
+        'multiplier' => 'decimal:2',
+        'calculated_price' => 'decimal:2',
+        'final_price' => 'decimal:2'
     ];
 
     public function service()

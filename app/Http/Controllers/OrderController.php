@@ -73,8 +73,13 @@ class OrderController extends Controller
             'whatsapp' => 'required|string|max:20',
             'notes' => 'required|string|max:2000',
             'attachment' => 'required|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,zip,rar',
-            'payment_method' => 'required|string',
             'cart_items' => 'required|json',
+            // Parameter kalkulasi
+            'question_type' => 'required|string|in:multiple_choice,essay,calculation,project,coding',
+            'subject' => 'required|string|max:255',
+            'question_count' => 'required|integer|min:1',
+            'needs_explanation' => 'nullable|boolean',
+            'deadline' => 'required|date|after:now',
         ]);
 
         // Handle file upload
@@ -95,9 +100,24 @@ class OrderController extends Controller
             ], 400);
         }
 
+        // Hitung deadline dalam jam
+        $deadlineDate = new \DateTime($validated['deadline']);
+        $now = new \DateTime();
+        $interval = $now->diff($deadlineDate);
+        $deadlineHours = ($interval->days * 24) + $interval->h;
+
+        // Gunakan PriceCalculator service
+        $calculator = new \App\Services\PriceCalculator();
+        $calculation = $calculator->calculate(
+            $validated['question_type'],
+            $validated['subject'],
+            $validated['question_count'],
+            $validated['needs_explanation'] ?? false,
+            $deadlineHours
+        );
+
         // Create orders for each service in cart
         $orders = [];
-        $totalEstimation = 0;
         
         foreach ($cartItems as $item) {
             $service = Service::find($item['id']);
@@ -106,9 +126,6 @@ class OrderController extends Controller
                 continue;
             }
 
-            $itemPrice = $item['price'] * $item['quantity'];
-            $totalEstimation += $itemPrice;
-
             $order = Order::create([
                 'client_name' => $validated['name'],
                 'client_email' => $validated['email'],
@@ -116,48 +133,92 @@ class OrderController extends Controller
                 'service_id' => $service->id,
                 'project_title' => $service->name . ' - Order #' . time(),
                 'description' => $validated['notes'],
-                'deadline' => now()->addDays(7), // Default 7 days, will be confirmed via WhatsApp
-                'budget' => $itemPrice, // Use estimated price from cart
+                'deadline' => $validated['deadline'],
+                'budget' => $calculation['calculated_price'], // Harga hasil kalkulasi otomatis
                 'quantity' => $item['quantity'],
-                'payment_method' => $validated['payment_method'],
+                'payment_method' => null, // Will be determined after confirmation
                 'attachment' => $attachmentPath,
                 'status' => 'pending',
-                'notes' => 'Menunggu review file dan konfirmasi harga final dari admin.',
+                'notes' => 'Menunggu konfirmasi dari admin via WhatsApp.',
+                // Parameter kalkulasi
+                'question_type' => $validated['question_type'],
+                'subject' => $validated['subject'],
+                'question_count' => $validated['question_count'],
+                'needs_explanation' => $validated['needs_explanation'] ?? false,
+                'deadline_hours' => $deadlineHours,
+                // Hasil kalkulasi
+                'difficulty_score' => $calculation['difficulty_score'],
+                'difficulty_level' => $calculation['difficulty_level'],
+                'base_price' => $calculation['base_price'],
+                'multiplier' => $calculation['multiplier'],
+                'calculated_price' => $calculation['calculated_price'],
+                'final_price' => $calculation['calculated_price'], // Default sama dengan calculated
+                'price_overridden' => false,
             ]);
 
             $orders[] = $order;
         }
 
         // Send WhatsApp notification for all orders
-        $this->sendCheckoutNotification($orders, $validated, $attachmentPath, $totalEstimation);
+        $this->sendCheckoutNotification($orders, $validated, $attachmentPath, $calculation);
 
         return response()->json([
             'success' => true,
-            'message' => 'Pesanan berhasil! Tim kami akan review file dan menghubungi Anda via WhatsApp dengan harga final.',
-            'order_count' => count($orders)
+            'message' => 'Pesanan berhasil! Harga otomatis telah dihitung. Kami akan hubungi Anda via WhatsApp untuk konfirmasi.',
+            'order_count' => count($orders),
+            'calculated_price' => $calculation['calculated_price']
         ]);
     }
 
-    private function sendCheckoutNotification($orders, $customerData, $attachmentPath, $totalEstimation)
+    private function sendCheckoutNotification($orders, $customerData, $attachmentPath, $calculation)
     {
-        $message = "🔔 *PESANAN BARU dari Keranjang*\n\n";
+        $difficultyLabel = [
+            'easy' => '🟢 MUDAH',
+            'medium' => '🟡 SEDANG',
+            'hard' => '🔴 SULIT'
+        ];
+
+        $questionTypeLabel = [
+            'multiple_choice' => 'Pilihan Ganda',
+            'essay' => 'Esai/Uraian',
+            'calculation' => 'Hitungan/Matematika',
+            'project' => 'Project/Tugas Besar',
+            'coding' => 'Coding/Pemrograman'
+        ];
+
+        $message = "🔔 *PESANAN BARU dengan Kalkulasi Otomatis*\n\n";
         $message .= "👤 *Pelanggan:* {$customerData['name']}\n";
         $message .= "📧 *Email:* {$customerData['email']}\n";
-        $message .= "📱 *WhatsApp:* {$customerData['whatsapp']}\n";
-        $message .= "💳 *Metode Pembayaran:* " . strtoupper($customerData['payment_method']) . "\n\n";
+        $message .= "📱 *WhatsApp:* {$customerData['whatsapp']}\n\n";
+        
+        $message .= "📊 *PARAMETER KALKULASI:*\n";
+        $message .= str_repeat("─", 30) . "\n";
+        $message .= "• *Jenis:* " . ($questionTypeLabel[$customerData['question_type']] ?? $customerData['question_type']) . "\n";
+        $message .= "• *Mata Pelajaran:* {$customerData['subject']}\n";
+        $message .= "• *Jumlah:* {$customerData['question_count']} soal/halaman\n";
+        $message .= "• *Penjelasan:* " . (($customerData['needs_explanation'] ?? false) ? 'Ya' : 'Tidak') . "\n";
+        $message .= "• *Deadline:* {$customerData['deadline']}\n";
+        $message .= str_repeat("─", 30) . "\n\n";
+        
+        $message .= "💰 *HASIL KALKULASI HARGA:*\n";
+        $message .= "• *Kesulitan:* " . ($difficultyLabel[$calculation['difficulty_level']] ?? $calculation['difficulty_level']) . "\n";
+        $message .= "• *Skor:* {$calculation['difficulty_score']}/100\n";
+        $message .= "• *Harga Dasar:* Rp " . number_format($calculation['base_price'], 0, ',', '.') . "\n";
+        $message .= "• *Pengali:* {$calculation['multiplier']}x\n";
+        $message .= "• *Harga per Unit:* Rp " . number_format($calculation['pricePerUnit'], 0, ',', '.') . "\n";
+        $message .= "• *TOTAL HARGA:* *Rp " . number_format($calculation['calculated_price'], 0, ',', '.') . "*\n\n";
         
         $message .= "📋 *Detail Pesanan:*\n";
         $message .= str_repeat("─", 30) . "\n";
         
         foreach ($orders as $order) {
             $message .= "• {$order->service->name}\n";
-            $message .= "  Qty: {$order->quantity} | Estimasi: Rp " . number_format($order->budget, 0, ',', '.') . "\n";
+            $message .= "  Qty: {$order->quantity}\n";
         }
         
         $message .= str_repeat("─", 30) . "\n";
-        $message .= "💰 *Total Estimasi:* Rp " . number_format($totalEstimation, 0, ',', '.') . "\n";
         
-        $message .= "\n📝 *Detail Tugas:*\n{$customerData['notes']}\n";
+        $message .= "\n📝 *Catatan Customer:*\n{$customerData['notes']}\n";
         
         if ($attachmentPath) {
             $message .= "\n📎 *File Terlampir:* " . basename($attachmentPath) . "\n";
@@ -165,21 +226,23 @@ class OrderController extends Controller
         }
         
         $message .= "\n" . str_repeat("─", 30) . "\n";
-        $message .= "⚠️ *ACTION REQUIRED - Proses Ini:*\n\n";
-        $message .= "1️⃣ Download & review file tugas customer\n";
-        $message .= "2️⃣ Analisa kompleksitas dan waktu pengerjaan\n";
-        $message .= "3️⃣ Tentukan harga final yang sesuai\n";
+        $message .= "⚠️ *ACTION REQUIRED:*\n\n";
+        $message .= "1️⃣ Review file tugas customer\n";
+        $message .= "2️⃣ Verifikasi apakah file sesuai parameter\n";
+        $message .= "3️⃣ Jika perlu adjustment harga, gunakan admin override\n";
         $message .= "4️⃣ Hubungi customer di: {$customerData['whatsapp']}\n";
-        $message .= "5️⃣ Konfirmasi harga, deadline, dan detail lainnya\n";
-        $message .= "6️⃣ Setelah deal, update status di admin panel\n";
-        $message .= "\n⏰ *Response Time:* Hubungi dalam 1-2 jam\n";
+        $message .= "5️⃣ Konfirmasi harga dan detail\n";
+        $message .= "6️⃣ Update status di admin panel setelah deal\n";
+        $message .= "\n💡 *Harga sudah dihitung otomatis berdasarkan parameter objektif*\n";
+        $message .= "⏰ *Response Time:* Hubungi dalam 1-2 jam\n";
 
         // TODO: Implement actual WhatsApp sending
         // For now, log the message
         \Log::info('New Order Notification:', [
             'customer' => $customerData['name'],
             'orders' => count($orders),
-            'total_estimation' => $totalEstimation,
+            'calculated_price' => $calculation['calculated_price'],
+            'difficulty_level' => $calculation['difficulty_level'],
             'file' => $attachmentPath,
             'message' => $message
         ]);
