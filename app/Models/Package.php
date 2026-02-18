@@ -14,6 +14,7 @@ class Package extends Model
         'name',
         'slug',
         'price_per_unit',
+        'unit_label',
         'description',
         'features',
         'min_quantity',

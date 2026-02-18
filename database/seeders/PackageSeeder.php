@@ -10,125 +10,136 @@ class PackageSeeder extends Seeder
 {
     public function run(): void
     {
-        // Get all services
+        // REALISTIC PRICING FOR INDONESIAN STUDENT MARKET (2026)
+        // Based on: 25k-100k+ range for academic work
+        
         $services = Service::all();
 
         foreach ($services as $service) {
-            // Determine price per unit based on service name/category
-            $basePrice = $this->getBasePrice($service->name);
-
-            // Create 3 packages: Hemat, Standar, Premium
-            Package::create([
-                'service_id' => $service->id,
-                'name' => 'Paket Hemat',
-                'slug' => 'hemat',
-                'price_per_unit' => $basePrice * 0.7, // 30% discount
-                'description' => 'Paket ekonomis tanpa revisi. Cocok untuk tugas sederhana dengan deadline normal.',
-                'features' => [
-                    'Pengerjaan standar',
-                    'Format dasar',
-                    'Tanpa revisi',
-                    'Deadline normal (5-7 hari)',
-                    'WhatsApp support'
-                ],
-                'min_quantity' => 1,
-                'is_active' => true,
-                'sort_order' => 1
-            ]);
-
-            Package::create([
-                'service_id' => $service->id,
-                'name' => 'Paket Standar',
-                'slug' => 'standar',
-                'price_per_unit' => $basePrice, // Base price
-                'description' => 'Paket paling populer dengan revisi dan kualitas terjamin. Cocok untuk sebagian besar kebutuhan.',
-                'features' => [
-                    'Pengerjaan detail',
-                    'Format rapi',
-                    '1x revisi gratis',
-                    'Deadline fleksibel (3-5 hari)',
-                    'WhatsApp + Email support',
-                    'Konsultasi singkat'
-                ],
-                'min_quantity' => 1,
-                'is_active' => true,
-                'sort_order' => 2
-            ]);
-
-            Package::create([
-                'service_id' => $service->id,
-                'name' => 'Paket Premium',
-                'slug' => 'premium',
-                'price_per_unit' => $basePrice * 1.5, // 50% premium
-                'description' => 'Paket terbaik dengan revisi unlimited dan prioritas tinggi. Cocok untuk tugas penting dan deadline ketat.',
-                'features' => [
-                    'Pengerjaan expert',
-                    'Format premium',
-                    'Revisi unlimited',
-                    'Priority deadline (1-3 hari)',
-                    '24/7 WhatsApp support',
-                    'Konsultasi detail',
-                    'Quality assurance',
-                    'Refund guarantee'
-                ],
-                'min_quantity' => 1,
-                'is_active' => true,
-                'sort_order' => 3
-            ]);
+            $serviceCategory = strtolower($service->category ?? '');
+            
+            // TUGAS SMA - Per Paket (1-5 soal per paket)
+            if (str_contains($serviceCategory, 'sma')) {
+                $this->createPackages($service->id, 'Tugas SMA', [
+                    'hemat' => ['price' => 25000, 'qty' => 1, 'unit' => 'paket'],
+                    'standar' => ['price' => 40000, 'qty' => 1, 'unit' => 'paket'],
+                    'premium' => ['price' => 60000, 'qty' => 1, 'unit' => 'paket']
+                ]);
+            }
+            // TUGAS KULIAH - Per Paket (1-3 assignment per paket)
+            elseif (str_contains($serviceCategory, 'kuliah')) {
+                $this->createPackages($service->id, 'Tugas Kuliah', [
+                    'hemat' => ['price' => 35000, 'qty' => 1, 'unit' => 'paket'],
+                    'standar' => ['price' => 55000, 'qty' => 1, 'unit' => 'paket'],
+                    'premium' => ['price' => 85000, 'qty' => 1, 'unit' => 'paket']
+                ]);
+            }
+            // MAKALAH - Per Halaman (minimum 5 halaman)
+            elseif (str_contains($serviceCategory, 'makalah')) {
+                $this->createPackages($service->id, 'Penulisan Makalah', [
+                    'hemat' => ['price' => 5000, 'qty' => 5, 'unit' => 'halaman'],
+                    'standar' => ['price' => 8000, 'qty' => 5, 'unit' => 'halaman'],
+                    'premium' => ['price' => 12000, 'qty' => 5, 'unit' => 'halaman']
+                ]);
+            }
+            // SKRIPSI - Per Halaman (minimum 50 halaman)
+            elseif (str_contains($serviceCategory, 'skripsi')) {
+                $this->createPackages($service->id, 'Penulisan Skripsi', [
+                    'hemat' => ['price' => 8000, 'qty' => 50, 'unit' => 'halaman'],
+                    'standar' => ['price' => 12000, 'qty' => 50, 'unit' => 'halaman'],
+                    'premium' => ['price' => 18000, 'qty' => 50, 'unit' => 'halaman']
+                ]);
+            }
+            // TESIS - Per Halaman (minimum 80 halaman)
+            elseif (str_contains($serviceCategory, 'tesis')) {
+                $this->createPackages($service->id, 'Penulisan Tesis', [
+                    'hemat' => ['price' => 12000, 'qty' => 80, 'unit' => 'halaman'],
+                    'standar' => ['price' => 18000, 'qty' => 80, 'unit' => 'halaman'],
+                    'premium' => ['price' => 25000, 'qty' => 80, 'unit' => 'halaman']
+                ]);
+            }
+            // REVISI - Per Halaman (minimum 10 halaman)
+            elseif (str_contains($serviceCategory, 'revisi')) {
+                $this->createPackages($service->id, 'Revisi & Editing', [
+                    'hemat' => ['price' => 3000, 'qty' => 10, 'unit' => 'halaman'],
+                    'standar' => ['price' => 5000, 'qty' => 10, 'unit' => 'halaman'],
+                    'premium' => ['price' => 8000, 'qty' => 10, 'unit' => 'halaman']
+                ]);
+            }
+            // OTHER SERVICES - Per Item/Project (default pricing)
+            else {
+                $this->createPackages($service->id, $service->name, [
+                    'hemat' => ['price' => 250000, 'qty' => 1, 'unit' => 'item'],
+                    'standar' => ['price' => 400000, 'qty' => 1, 'unit' => 'item'],
+                    'premium' => ['price' => 600000, 'qty' => 1, 'unit' => 'item']
+                ]);
+            }
         }
     }
 
-    private function getBasePrice($serviceName)
+    private function createPackages($serviceId, $serviceName, $pricing)
     {
-        // Harga per unit berdasarkan tipe service (STANDAR PASAR INDONESIA 2026)
-        $serviceName = strtolower($serviceName);
-        
-        // ACADEMIC - Per Halaman/Unit
-        if (str_contains($serviceName, 'makalah')) {
-            return 7500; // 5k-10k/halaman → average 7.5k
-        } elseif (str_contains($serviceName, 'proposal')) {
-            return 15000; // 15k/halaman standar
-        } elseif (str_contains($serviceName, 'skripsi') || str_contains($serviceName, 'thesis')) {
-            return 20000; // 20k/halaman
-        } elseif (str_contains($serviceName, 'tesis')) {
-            return 30000; // 30k/halaman (tertinggi)
-        }
-        
-        // ASSIGNMENTS - Per Paket
-        else if (str_contains($serviceName, 'tugas') || str_contains($serviceName, 'homework')) {
-            return 75000; // 25k-120k → average 75k
-        } elseif (str_contains($serviceName, 'essay') || str_contains($serviceName, 'esai')) {
-            return 12000; // Per halaman
-        } elseif (str_contains($serviceName, 'ulangan') || str_contains($serviceName, 'test')) {
-            return 50000; // Per set
-        } elseif (str_contains($serviceName, 'kuis')) {
-            return 30000; // Per kuis
-        }
-        
-        // TECHNOLOGY - Per Level/Project
-        else if (str_contains($serviceName, 'iot') || str_contains($serviceName, 'mikrokontroler')) {
-            return 500000; // 250k-900k → average 500k
-        } elseif (str_contains($serviceName, 'programming') || str_contains($serviceName, 'coding')) {
-            return 350000; // Per project
-        } elseif (str_contains($serviceName, 'web') || str_contains($serviceName, 'website')) {
-            return 300000; // Per fitur/page
-        } elseif (str_contains($serviceName, 'mobile') || str_contains($serviceName, 'app')) {
-            return 400000; // Per fitur
-        }
-        
-        // OTHER
-        else if (str_contains($serviceName, 'design') || str_contains($serviceName, 'desain')) {
-            return 100000; // Per desain
-        } elseif (str_contains($serviceName, 'presentation') || str_contains($serviceName, 'ppt')) {
-            return 50000; // Per slide set (20 slides)
-        } elseif (str_contains($serviceName, 'video') || str_contains($serviceName, 'editing')) {
-            return 200000; // Per menit
-        } elseif (str_contains($serviceName, 'translasi') || str_contains($serviceName, 'translation')) {
-            return 8000; // Per 100 kata
-        }
-        
-        else {
-            return 50000; // Default fallback
-        }
+        // HEMAT PACKAGE
+        Package::create([
+            'service_id' => $serviceId,
+            'name' => 'Paket Hemat',
+            'slug' => 'hemat',
+            'price_per_unit' => $pricing['hemat']['price'],
+            'unit_label' => $pricing['hemat']['unit'],
+            'min_quantity' => $pricing['hemat']['qty'],
+            'description' => "Paket ekonomis untuk {$serviceName}. Pengerjaan standar tanpa revisi.",
+            'features' => json_encode([
+                'Pengerjaan standar',
+                'Format dasar',
+                'Tanpa revisi',
+                'Deadline normal (5-7 hari)',
+                'WhatsApp support'
+            ]),
+            'is_active' => true,
+            'sort_order' => 1
+        ]);
+
+        // STANDAR PACKAGE
+        Package::create([
+            'service_id' => $serviceId,
+            'name' => 'Paket Standar',
+            'slug' => 'standar',
+            'price_per_unit' => $pricing['standar']['price'],
+            'unit_label' => $pricing['standar']['unit'],
+            'min_quantity' => $pricing['standar']['qty'],
+            'description' => "Paket populer untuk {$serviceName}. Dengan 1x revisi gratis.",
+            'features' => json_encode([
+                'Pengerjaan detail',
+                'Format rapi & profesional',
+                '1x revisi gratis',
+                'Deadline fleksibel (3-5 hari)',
+                'WhatsApp + Email support',
+                'Konsultasi singkat'
+            ]),
+            'is_active' => true,
+            'sort_order' => 2
+        ]);
+
+        // PREMIUM PACKAGE
+        Package::create([
+            'service_id' => $serviceId,
+            'name' => 'Paket Premium',
+            'slug' => 'premium',
+            'price_per_unit' => $pricing['premium']['price'],
+            'unit_label' => $pricing['premium']['unit'],
+            'min_quantity' => $pricing['premium']['qty'],
+            'description' => "Paket terbaik untuk {$serviceName}. Dengan 2x revisi & priority service.",
+            'features' => json_encode([
+                'Pengerjaan expert level',
+                'Format premium & sempurna',
+                '2x revisi gratis',
+                'Priority deadline (1-3 hari)',
+                '24/7 WhatsApp support',
+                'Konsultasi detail',
+                'Quality assurance & cek plagiasi'
+            ]),
+            'is_active' => true,
+            'sort_order' => 3
+        ]);
     }
 }

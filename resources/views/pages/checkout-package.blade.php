@@ -23,6 +23,47 @@
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-lg-8">
+                        <!-- CUSTOMER INFO - PALING ATAS -->
+                        <div class="card shadow-sm mb-4" style="border: none; border-radius: 12px;">
+                            <div class="card-body p-4">
+                                <h5 class="fw-bold mb-4"><i class="bi bi-person-circle"></i> Informasi Anda</h5>
+
+                                <div class="row">
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Nama Lengkap <span class="text-danger">*</span></label>
+                                        <input type="text" name="name" class="form-control form-control-lg" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
+                                        <input type="email" name="email" class="form-control form-control-lg" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">WhatsApp <span class="text-danger">*</span></label>
+                                        <input type="tel" name="whatsapp" class="form-control form-control-lg" placeholder="08xx xxxx xxxx" required>
+                                    </div>
+                                    <div class="col-md-6 mb-3">
+                                        <label class="form-label fw-bold">Deadline <span class="text-danger">*</span></label>
+                                        <input type="datetime-local" name="deadline" class="form-control form-control-lg" required>
+                                    </div>
+                                    <div class="col-12 mb-3">
+                                        <label class="form-label fw-bold">Detail Pesanan <span class="text-danger">*</span></label>
+                                        <textarea name="notes" class="form-control" rows="4" required placeholder="Jelaskan detail tugas Anda..."></textarea>
+                                    </div>
+                                    <div class="col-12">
+                                        <label class="form-label fw-bold">Upload File <span class="text-danger">*</span></label>
+                                        <div class="file-upload">
+                                            <input type="file" name="attachment" id="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar" required>
+                                            <label for="file-input">
+                                                <i class="bi bi-cloud-upload"></i>
+                                                <span>Klik untuk upload atau drag & drop</span>
+                                                <small>Max 10MB • PDF, DOC, JPG, PNG, ZIP</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <!-- PRICING PLANS -->
                         <div class="mb-5">
                             <h2 class="h3 fw-bold mb-2">Pilih Paket Anda</h2>
@@ -47,7 +88,7 @@
                                             <div class="price-box">
                                                 <span class="currency">Rp</span>
                                                 <span class="amount">{{ number_format($package->price_per_unit, 0, ',', '.') }}</span>
-                                                <span class="unit">/unit</span>
+                                                <span class="unit">/{{ $package->unit_label }}</span>
                                             </div>
                                             <p class="plan-desc">{{ $package->description }}</p>
                                         </div>
@@ -122,47 +163,6 @@
                                         </div>
                                     </div>
                                     @endforeach
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- CUSTOMER INFO -->
-                        <div class="card shadow-sm mb-4" style="border: none; border-radius: 12px;">
-                            <div class="card-body p-4">
-                                <h5 class="fw-bold mb-4"><i class="bi bi-person-circle"></i> Informasi Anda</h5>
-
-                                <div class="row">
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Nama Lengkap <span class="text-danger">*</span></label>
-                                        <input type="text" name="name" class="form-control form-control-lg" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Email <span class="text-danger">*</span></label>
-                                        <input type="email" name="email" class="form-control form-control-lg" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">WhatsApp <span class="text-danger">*</span></label>
-                                        <input type="tel" name="whatsapp" class="form-control form-control-lg" placeholder="08xx xxxx xxxx" required>
-                                    </div>
-                                    <div class="col-md-6 mb-3">
-                                        <label class="form-label fw-bold">Deadline <span class="text-danger">*</span></label>
-                                        <input type="datetime-local" name="deadline" class="form-control form-control-lg" required>
-                                    </div>
-                                    <div class="col-12 mb-3">
-                                        <label class="form-label fw-bold">Detail Pesanan <span class="text-danger">*</span></label>
-                                        <textarea name="notes" class="form-control" rows="4" required placeholder="Jelaskan detail tugas Anda..."></textarea>
-                                    </div>
-                                    <div class="col-12">
-                                        <label class="form-label fw-bold">Upload File <span class="text-danger">*</span></label>
-                                        <div class="file-upload">
-                                            <input type="file" name="attachment" id="file-input" accept=".pdf,.doc,.docx,.jpg,.jpeg,.png,.zip,.rar" required>
-                                            <label for="file-input">
-                                                <i class="bi bi-cloud-upload"></i>
-                                                <span>Klik untuk upload atau drag & drop</span>
-                                                <small>Max 10MB • PDF, DOC, JPG, PNG, ZIP</small>
-                                            </label>
-                                        </div>
-                                    </div>
                                 </div>
                             </div>
                         </div>
