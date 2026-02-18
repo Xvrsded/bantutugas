@@ -227,9 +227,21 @@
     </style>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Check if cart is empty
-            if (!cart || cart.items.length === 0) {
+        // Wait for cart to be fully loaded
+        function initCheckout() {
+            // Get cart from localStorage directly
+            const cartData = localStorage.getItem('bantutugas_cart');
+            
+            if (!cartData) {
+                alert('Keranjang Anda kosong! Silakan pilih layanan terlebih dahulu.');
+                window.location.href = '{{ route("home") }}';
+                return;
+            }
+
+            const items = JSON.parse(cartData);
+            
+            if (!items || items.length === 0) {
+                alert('Keranjang Anda kosong! Silakan pilih layanan terlebih dahulu.');
                 window.location.href = '{{ route("home") }}';
                 return;
             }
@@ -240,24 +252,33 @@
             const totalEl = document.getElementById('summary-total');
 
             let html = '';
-            cart.items.forEach(item => {
+            let total = 0;
+
+            items.forEach(item => {
+                const itemTotal = item.price * item.quantity;
+                total += itemTotal;
+                
                 html += `
                     <div class="order-item">
                         <div class="order-item-name">${item.name}</div>
                         <div class="order-item-qty">x${item.quantity}</div>
-                        <div class="order-item-price">Rp ${cart.formatPrice(item.price * item.quantity)}</div>
+                        <div class="order-item-price">Rp ${new Intl.NumberFormat('id-ID').format(itemTotal)}</div>
                     </div>
                 `;
             });
 
             summaryDiv.innerHTML = html;
 
-            const total = cart.getTotalPrice();
-            subtotalEl.textContent = 'Rp ' + cart.formatPrice(total);
-            totalEl.textContent = 'Rp ' + cart.formatPrice(total);
+            subtotalEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
+            totalEl.textContent = 'Rp ' + new Intl.NumberFormat('id-ID').format(total);
 
             // Set cart items to hidden input
-            document.getElementById('cart-items-input').value = JSON.stringify(cart.items);
+            document.getElementById('cart-items-input').value = JSON.stringify(items);
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Initialize checkout
+            initCheckout();
 
             // Handle form submission
             document.getElementById('checkout-form').addEventListener('submit', function(e) {
@@ -271,15 +292,37 @@
                 submitBtn.disabled = true;
                 submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Memproses...';
 
-                // Simulate processing (replace with actual AJAX call)
-                setTimeout(() => {
-                    // Clear cart
-                    cart.clearCart();
-                    
-                    // Redirect to success page (you can create this later)
-                    alert('Pesanan berhasil! Kami akan menghubungi Anda via WhatsApp segera.');
-                    window.location.href = '{{ route("home") }}';
-                }, 1500);
+                // Submit via AJAX
+                fetch('{{ route("checkout.process") }}', {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        'X-Requested-With': 'XMLHttpRequest'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        // Clear cart from localStorage
+                        localStorage.removeItem('bantutugas_cart');
+                        
+                        // Show success message
+                        alert('Pesanan berhasil dibuat! Kami akan menghubungi Anda via WhatsApp segera.');
+                        
+                        // Redirect to home
+                        window.location.href = '{{ route("home") }}';
+                    } else {
+                        alert('Terjadi kesalahan. Silakan coba lagi.');
+                        submitBtn.disabled = false;
+                        submitBtn.innerHTML = originalText;
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan. Silakan coba lagi.');
+                    submitBtn.disabled = false;
+                    submitBtn.innerHTML = originalText;
+                });
             });
         });
     </script>

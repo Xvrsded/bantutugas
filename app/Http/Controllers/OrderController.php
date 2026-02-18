@@ -68,10 +68,10 @@ class OrderController extends Controller
     public function processCheckout(Request $request)
     {
         $validated = $request->validate([
-            'customer_name' => 'required|string|max:255',
-            'customer_email' => 'required|email|max:255',
-            'customer_whatsapp' => 'required|string|max:20',
-            'order_notes' => 'nullable|string|max:1000',
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'whatsapp' => 'required|string|max:20',
+            'notes' => 'nullable|string|max:1000',
             'payment_method' => 'required|string',
             'cart_items' => 'required|json',
         ]);
@@ -80,7 +80,10 @@ class OrderController extends Controller
         $cartItems = json_decode($validated['cart_items'], true);
         
         if (empty($cartItems)) {
-            return back()->with('error', 'Keranjang kosong!');
+            return response()->json([
+                'success' => false,
+                'message' => 'Keranjang kosong!'
+            ], 400);
         }
 
         // Create orders for each service in cart
@@ -93,12 +96,12 @@ class OrderController extends Controller
             }
 
             $order = Order::create([
-                'client_name' => $validated['customer_name'],
-                'client_email' => $validated['customer_email'],
-                'client_phone' => $validated['customer_whatsapp'],
+                'client_name' => $validated['name'],
+                'client_email' => $validated['email'],
+                'client_phone' => $validated['whatsapp'],
                 'service_id' => $service->id,
                 'project_title' => $service->name . ' - Order dari Cart',
-                'description' => $validated['order_notes'] ?? 'Order melalui keranjang belanja',
+                'description' => $validated['notes'] ?? 'Order melalui keranjang belanja',
                 'deadline' => now()->addDays(7), // Default 7 days
                 'budget' => $item['price'] * $item['quantity'],
                 'quantity' => $item['quantity'],
@@ -122,9 +125,9 @@ class OrderController extends Controller
     private function sendCheckoutNotification($orders, $customerData)
     {
         $message = "Halo Admin! Pesanan baru dari keranjang:\n\n";
-        $message .= "Pelanggan: {$customerData['customer_name']}\n";
-        $message .= "Email: {$customerData['customer_email']}\n";
-        $message .= "WhatsApp: {$customerData['customer_whatsapp']}\n";
+        $message .= "Pelanggan: {$customerData['name']}\n";
+        $message .= "Email: {$customerData['email']}\n";
+        $message .= "WhatsApp: {$customerData['whatsapp']}\n";
         $message .= "Metode Pembayaran: {$customerData['payment_method']}\n";
         $message .= "\nDaftar Layanan:\n";
         
@@ -135,7 +138,7 @@ class OrderController extends Controller
         }
         
         $message .= "\nTotal: Rp " . number_format($total, 0, ',', '.') . "\n";
-        $message .= "\nCatatan: " . ($customerData['order_notes'] ?? '-');
+        $message .= "\nCatatan: " . ($customerData['notes'] ?? '-');
 
         // TODO: Implement actual WhatsApp sending
         // Mark all orders as notified
