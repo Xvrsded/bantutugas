@@ -122,64 +122,84 @@
 
             <div class="payment-carousel">
                 <div class="payment-slider">
-                    <!-- E-Wallet: OVO -->
+                    <!-- OVO -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%);">
-                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">O</span>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%); position: relative;">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="50" height="50">
+                                <circle cx="30" cy="30" r="25" fill="white" opacity="0.95"/>
+                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#550099">OVO</text>
+                            </svg>
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
 
-                    <!-- E-Wallet: GoPay -->
+                    <!-- GoPay -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="40" height="40">
-                                <circle cx="20" cy="20" r="12" fill="white"/>
-                                <path d="M35 30 L50 15 L50 35 Z" fill="white"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <g fill="white">
+                                    <circle cx="18" cy="20" r="8"/>
+                                    <path d="M35 20 C35 15 40 12 45 12 C50 12 53 15 53 20"/>
+                                    <path d="M18 35 C18 28 24 22 30 22 C36 22 42 28 42 35"/>
+                                </g>
                             </svg>
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
 
-                    <!-- E-Wallet: Dana -->
+                    <!-- Dana -->
                     <div class="payment-item">
-                        <div class="payment-logo" style="background: linear-gradient(135deg, #0099ff 0%, #0077ff 100%);">
-                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">D</span>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <circle cx="30" cy="30" r="22" fill="white" opacity="0.95"/>
+                                <text x="30" y="39" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#0099ff">D</text>
+                            </svg>
                         </div>
                         <p class="payment-name">Dana</p>
                     </div>
 
-                    <!-- E-Wallet: LinkAja -->
+                    <!-- LinkAja -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);">
-                            <span style="font-size: 1.8rem; font-weight: bold; color: white;">LA</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <rect x="8" y="15" width="44" height="30" rx="4" fill="white" opacity="0.95"/>
+                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="16" font-weight="bold" text-anchor="middle" fill="#ff5722">LinkAja</text>
+                            </svg>
                         </div>
                         <p class="payment-name">LinkAja</p>
                     </div>
 
-                    <!-- Bank: Mandiri -->
+                    <!-- Mandiri -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
-                            <span style="font-size: 2rem; font-weight: bold; color: white;">BTN</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <rect x="10" y="10" width="40" height="40" rx="3" fill="white" opacity="0.95"/>
+                                <circle cx="30" cy="30" r="12" fill="#e74c3c"/>
+                                <path d="M30 25 L35 35 L25 35 Z" fill="#e74c3c"/>
+                            </svg>
                         </div>
                         <p class="payment-name">Mandiri</p>
                     </div>
 
-                    <!-- Bank: SeaBank -->
+                    <!-- SeaBank -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #1e90ff 0%, #1873cc 100%);">
-                            <span style="font-size: 2.2rem; font-weight: bold; color: white;">≈</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <ellipse cx="30" cy="30" rx="22" ry="20" fill="white" opacity="0.95"/>
+                                <path d="M20 28 Q30 22 40 28" fill="none" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/>
+                                <path d="M20 34 Q30 28 40 34" fill="none" stroke="#1e90ff" stroke-width="2" stroke-linecap="round"/>
+                            </svg>
                         </div>
                         <p class="payment-name">SeaBank</p>
                     </div>
 
-                    <!-- Bank: Bank Jago -->
+                    <!-- Bank Jago -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #00a8e8 0%, #0088cc 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="35" height="35">
-                                <path d="M30 10 L45 25 L45 50 L15 50 L15 25 Z" fill="white"/>
-                                <rect x="20" y="30" width="10" height="12" fill="#00a8e8"/>
-                                <rect x="32" y="30" width="10" height="12" fill="#00a8e8"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <path d="M30 12 L48 26 L48 48 L12 48 L12 26 Z" fill="white" opacity="0.95"/>
+                                <path d="M22 32 L22 42 M38 32 L38 42" stroke="#00a8e8" stroke-width="2" stroke-linecap="round"/>
+                                <rect x="28" y="38" width="4" height="4" fill="#00a8e8"/>
                             </svg>
                         </div>
                         <p class="payment-name">Bank Jago</p>
@@ -188,16 +208,22 @@
                     <!-- Duplicate for seamless loop -->
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%);">
-                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">O</span>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="50" height="50">
+                                <circle cx="30" cy="30" r="25" fill="white" opacity="0.95"/>
+                                <text x="30" y="38" font-family="Arial, sans-serif" font-size="22" font-weight="bold" text-anchor="middle" fill="#550099">OVO</text>
+                            </svg>
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
 
                     <div class="payment-item">
                         <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
-                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="40" height="40">
-                                <circle cx="20" cy="20" r="12" fill="white"/>
-                                <path d="M35 30 L50 15 L50 35 Z" fill="white"/>
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="45" height="45">
+                                <g fill="white">
+                                    <circle cx="18" cy="20" r="8"/>
+                                    <path d="M35 20 C35 15 40 12 45 12 C50 12 53 15 53 20"/>
+                                    <path d="M18 35 C18 28 24 22 30 22 C36 22 42 28 42 35"/>
+                                </g>
                             </svg>
                         </div>
                         <p class="payment-name">GoPay</p>
