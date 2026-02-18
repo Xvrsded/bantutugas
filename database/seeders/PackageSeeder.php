@@ -53,9 +53,9 @@ class PackageSeeder extends Seeder
             // TESIS - Per Halaman (minimum 80 halaman)
             elseif (str_contains($serviceCategory, 'tesis')) {
                 $this->createPackages($service->id, 'Penulisan Tesis', [
-                    'hemat' => ['price' => 12000, 'qty' => 80, 'unit' => 'halaman'],
-                    'standar' => ['price' => 18000, 'qty' => 80, 'unit' => 'halaman'],
-                    'premium' => ['price' => 25000, 'qty' => 80, 'unit' => 'halaman']
+                    'hemat' => ['price' => 15000, 'qty' => 80, 'unit' => 'halaman'],
+                    'standar' => ['price' => 30000, 'qty' => 80, 'unit' => 'halaman'],
+                    'premium' => ['price' => 60000, 'qty' => 80, 'unit' => 'halaman']
                 ]);
             }
             // REVISI - Per Halaman (minimum 10 halaman)
@@ -80,7 +80,12 @@ class PackageSeeder extends Seeder
     private function createPackages($serviceId, $serviceName, $pricing)
     {
         // HEMAT PACKAGE
-        Package::create([
+        Package::updateOrCreate(
+            [
+                'service_id' => $serviceId,
+                'slug' => 'hemat'
+            ],
+            [
             'service_id' => $serviceId,
             'name' => 'Paket Hemat',
             'slug' => 'hemat',
@@ -97,10 +102,16 @@ class PackageSeeder extends Seeder
             ]),
             'is_active' => true,
             'sort_order' => 1
-        ]);
+            ]
+        );
 
         // STANDAR PACKAGE
-        Package::create([
+        Package::updateOrCreate(
+            [
+                'service_id' => $serviceId,
+                'slug' => 'standar'
+            ],
+            [
             'service_id' => $serviceId,
             'name' => 'Paket Standar',
             'slug' => 'standar',
@@ -118,10 +129,16 @@ class PackageSeeder extends Seeder
             ]),
             'is_active' => true,
             'sort_order' => 2
-        ]);
+            ]
+        );
 
         // PREMIUM PACKAGE
-        Package::create([
+        Package::updateOrCreate(
+            [
+                'service_id' => $serviceId,
+                'slug' => 'premium'
+            ],
+            [
             'service_id' => $serviceId,
             'name' => 'Paket Premium',
             'slug' => 'premium',
@@ -140,6 +157,7 @@ class PackageSeeder extends Seeder
             ]),
             'is_active' => true,
             'sort_order' => 3
-        ]);
+            ]
+        );
     }
 }

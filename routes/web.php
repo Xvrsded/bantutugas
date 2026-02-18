@@ -9,11 +9,11 @@ use App\Http\Controllers\Admin\AdminOrderController;
 // Public Routes
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/services', [PageController::class, 'services'])->name('services');
-Route::get('/pricing', [PageController::class, 'pricing'])->name('pricing');
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');
 Route::get('/how-to-order', [PageController::class, 'howToOrder'])->name('how-to-order');
 Route::get('/contact', [PageController::class, 'contact'])->name('contact');
 Route::post('/contact', [PageController::class, 'sendContact'])->name('contact.send');
+Route::post('/testimonial', [PageController::class, 'storeTestimonial'])->name('testimonial.store');
 Route::get('/disclaimer', [PageController::class, 'disclaimer'])->name('disclaimer');
 
 // Order Routes

@@ -83,7 +83,8 @@ class OrderController extends Controller
             'service_id' => 'required|exists:services,id',
             'package_id' => 'required|exists:packages,id',
             'unit_quantity' => 'required|integer|min:1',
-            'selected_addons' => 'nullable|json',
+            'selected_addons' => 'nullable',
+            'payment_choice' => 'required|in:dp,full',
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'whatsapp' => 'required|string|max:20',
@@ -115,7 +116,21 @@ class OrderController extends Controller
         // Calculate prices
         $packageSubtotal = $package->price_per_unit * $validated['unit_quantity'];
         $addonsTotal = 0;
-        $selectedAddons = json_decode($validated['selected_addons'] ?? '[]', true);
+        $selectedAddonsRaw = $validated['selected_addons'] ?? '[]';
+        $selectedAddons = [];
+        if (is_string($selectedAddonsRaw) && $selectedAddonsRaw !== '') {
+            $decoded = json_decode($selectedAddonsRaw, true);
+            if (json_last_error() === JSON_ERROR_NONE && is_array($decoded)) {
+                $selectedAddons = $decoded;
+            }
+        }
+
+        // Calculate final total and payment
+        $finalTotal = $packageSubtotal + $addonsTotal;
+        $paymentChoice = $validated['payment_choice'];
+        $dpPercentage = $paymentChoice === 'dp' ? 50 : 100;
+        $dpAmount = $paymentChoice === 'dp' ? $finalTotal * 0.5 : $finalTotal;
+        $remainingAmount = $paymentChoice === 'dp' ? $finalTotal - $dpAmount : 0;
 
         // Create order
         $order = Order::create([
@@ -134,6 +149,11 @@ class OrderController extends Controller
             'package_price' => $packageSubtotal,
             'addons_total' => 0, // Will be updated when addons are linked
             'subtotal' => $packageSubtotal,
+            'payment_method' => $paymentChoice === 'dp' ? 'dp_50' : 'full',
+            'payment_choice' => $paymentChoice,
+            'dp_percentage' => $dpPercentage,
+            'dp_amount' => $dpAmount,
+            'remaining_amount' => $remainingAmount,
             'is_notified' => false
         ]);
 
@@ -151,19 +171,45 @@ class OrderController extends Controller
         // Update order with final amounts
         $order->update([
             'addons_total' => $addonsTotal,
-            'subtotal' => $packageSubtotal + $addonsTotal,
-            'final_price' => $packageSubtotal + $addonsTotal,
-            'budget' => $packageSubtotal + $addonsTotal // For legacy compatibility
+            'subtotal' => $finalTotal,
+            'final_price' => $finalTotal,
+            'budget' => $finalTotal // For legacy compatibility
         ]);
 
         // Send notification
         $this->sendPackageCheckoutNotification($order);
 
-        return response()->json([
-            'success' => true,
-            'message' => 'Pesanan berhasil dibuat! Kami akan segera menghubungi Anda via WhatsApp.',
-            'order_id' => $order->id
-        ]);
+        if ($request->wantsJson()) {
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesanan berhasil dibuat! Kami akan segera menghubungi Anda via WhatsApp.',
+                'order_id' => $order->id
+            ]);
+        }
+
+        return redirect()->away($this->buildWhatsAppUrl($order));
+    }
+
+    private function buildWhatsAppUrl(Order $order)
+    {
+        $number = '6288991796535';
+        $paymentLabel = $order->payment_choice === 'dp' ? 'DP 50%' : 'FULL';
+        $dpText = $order->payment_choice === 'dp'
+            ? "DP: Rp " . number_format($order->dp_amount, 0, ',', '.') . " | Sisa: Rp " . number_format($order->remaining_amount, 0, ',', '.')
+            : "Pembayaran FULL";
+
+        $message = "Halo, saya sudah pesan di bantutugas.\n";
+        $message .= "Order ID: #{$order->id}\n";
+        $message .= "Layanan: {$order->service->name}\n";
+        $message .= "Paket: {$order->package->name}\n";
+        $message .= "Jumlah: {$order->unit_quantity} {$order->package->unit_label}\n";
+        $message .= "Total: Rp " . number_format($order->final_price, 0, ',', '.') . "\n";
+        $message .= "Metode: {$paymentLabel}\n";
+        $message .= $dpText . "\n";
+        $message .= "Deadline: {$order->deadline}\n";
+        $message .= "Catatan: {$order->description}";
+
+        return "https://wa.me/{$number}?text=" . urlencode($message);
     }
 
     private function processLegacyCheckout(Request $request)

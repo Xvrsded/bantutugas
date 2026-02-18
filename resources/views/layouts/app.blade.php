@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title') - bantutugas</title>
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+    <title>@yield('title') - Bantu Tugas</title>
     
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -41,6 +42,7 @@
         .navbar-brand {
             font-size: 1.5rem;
             font-weight: 700;
+            letter-spacing: 0.5px;
             color: white !important;
         }
 
@@ -99,6 +101,11 @@
             font-size: 3.5rem;
             font-weight: 700;
             margin-bottom: 1rem;
+        }
+
+        .brand-title {
+            letter-spacing: 1px;
+            text-transform: capitalize;
         }
 
         .hero .tagline {
@@ -218,7 +225,7 @@
     <nav class="navbar navbar-expand-lg navbar-dark sticky-top">
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">
-                bantutugas
+                Bantu Tugas
             </a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
                 <span class="navbar-toggler-icon"></span>
@@ -230,9 +237,6 @@
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Route::is('services') ? 'active' : '' }}" href="{{ route('services') }}">Layanan</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="nav-link {{ Route::is('pricing') ? 'active' : '' }}" href="{{ route('pricing') }}">Harga</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link {{ Route::is('portfolio') ? 'active' : '' }}" href="{{ route('portfolio') }}">Portofolio</a>
@@ -279,14 +283,13 @@
         <div class="container">
             <div class="row">
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
-                    <h5>bantutugas</h5>
+                    <h5>Bantu Tugas</h5>
                     <p>Menyediakan layanan bantuan akademik dan teknologi berkualitas untuk kesuksesan Anda.</p>
                 </div>
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
                     <h5>Layanan</h5>
                     <ul>
                         <li><a href="{{ route('services') }}">Semua Layanan</a></li>
-                        <li><a href="{{ route('pricing') }}">Paket Harga</a></li>
                         <li><a href="{{ route('portfolio') }}">Portofolio</a></li>
                     </ul>
                 </div>
@@ -309,7 +312,7 @@
                 </div>
             </div>
             <div class="footer-bottom">
-                <p>&copy; {{ now()->year }} bantutugas. All rights reserved. | <a href="{{ route('disclaimer') }}">Disclaimer</a></p>
+                <p>&copy; {{ now()->year }} Bantu Tugas. All rights reserved. | <a href="{{ route('disclaimer') }}">Disclaimer</a></p>
             </div>
         </div>
     </footer>

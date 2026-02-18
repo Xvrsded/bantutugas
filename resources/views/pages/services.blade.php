@@ -48,13 +48,18 @@
                                 @endif
 
                                 <div class="text-center mt-4">
+                                    @php
+                                        $priceRange = $service->price_range;
+                                        $unitLabel = optional($service->activePackages->first())->unit_label ?? 'unit';
+                                    @endphp
                                     <p class="text-danger fw-bold">
-                                        Rp {{ number_format($service->price_start, 0, ',', '.') }}
-                                        @if ($service->price_end)
-                                            - Rp {{ number_format($service->price_end, 0, ',', '.') }}
+                                        Rp {{ number_format($priceRange['min'], 0, ',', '.') }}
+                                        @if ($priceRange['max'] && $priceRange['max'] > $priceRange['min'])
+                                            - Rp {{ number_format($priceRange['max'], 0, ',', '.') }}
                                         @endif
+                                        <span class="text-muted fw-normal">/ {{ $unitLabel }}</span>
                                     </p>
-                                    <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-primary">
+                                    <a href="{{ route('checkout', ['service' => $service->id]) }}" class="btn btn-primary">
                                         <i class="bi bi-cart-plus"></i> Pesan
                                     </a>
                                 </div>
@@ -107,13 +112,18 @@
                                 @endif
 
                                 <div class="text-center mt-4">
+                                    @php
+                                        $priceRange = $service->price_range;
+                                        $unitLabel = optional($service->activePackages->first())->unit_label ?? 'unit';
+                                    @endphp
                                     <p class="text-danger fw-bold">
-                                        Rp {{ number_format($service->price_start, 0, ',', '.') }}
-                                        @if ($service->price_end)
-                                            - Rp {{ number_format($service->price_end, 0, ',', '.') }}
+                                        Rp {{ number_format($priceRange['min'], 0, ',', '.') }}
+                                        @if ($priceRange['max'] && $priceRange['max'] > $priceRange['min'])
+                                            - Rp {{ number_format($priceRange['max'], 0, ',', '.') }}
                                         @endif
+                                        <span class="text-muted fw-normal">/ {{ $unitLabel }}</span>
                                     </p>
-                                    <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-primary">
+                                    <a href="{{ route('checkout', ['service' => $service->id]) }}" class="btn btn-primary">
                                         <i class="bi bi-cart-plus"></i> Pesan
                                     </a>
                                 </div>
@@ -155,7 +165,7 @@
                     <div class="text-center">
                         <i class="bi bi-shield-check" style="font-size: 3rem; color: var(--secondary-color); margin-bottom: 1rem;"></i>
                         <h5>Terjamin Kualitas</h5>
-                        <p class="text-muted">Hasil berkualitas tinggi dengan revisi unlimited</p>
+                        <p class="text-muted">Hasil berkualitas tinggi dengan ngezoom bareng</p>
                     </div>
                 </div>
                 <div class="col-md-6 col-lg-3 mb-4">

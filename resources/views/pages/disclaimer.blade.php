@@ -62,7 +62,7 @@
                         <div class="card-body">
                             <h5 class="card-title"><i class="bi bi-clock-history"></i> Revisi & Perbaikan</h5>
                             <p class="card-text">
-                                Revisi unlimited tersedia hingga klien puas dengan hasil kerja, dengan syarat revisi masih berada dalam scope pekerjaan yang disepakati di awal. Perubahan scope besar akan dikenakan biaya tambahan.
+                                Ngezoom bareng tersedia untuk pembahasan sampai jelas, dengan syarat masih berada dalam scope pekerjaan yang disepakati di awal. Perubahan scope besar akan dikenakan biaya tambahan.
                             </p>
                         </div>
                     </div>

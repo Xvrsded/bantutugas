@@ -41,9 +41,6 @@
                                 
                                 <div class="mb-3">
                                     <small class="badge bg-secondary">{{ ucfirst($portfolio->category) }}</small>
-                                    @if ($portfolio->client_name)
-                                        <small class="badge bg-info">Klien: {{ $portfolio->client_name }}</small>
-                                    @endif
                                 </div>
 
                                 @if ($portfolio->technologies)

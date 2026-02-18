@@ -10,6 +10,8 @@ class AddonSeeder extends Seeder
     public function run(): void
     {
         // ADD-ONS REALISTIS SESUAI STANDAR PASAR INDONESIA 2026
+        Addon::where('slug', 'unlimited-revisions')->delete();
+
         $addons = [
             [
                 'name' => '⚡ Express 24 Jam',
@@ -57,11 +59,11 @@ class AddonSeeder extends Seeder
                 'sort_order' => 5
             ],
             [
-                'name' => '🔄 Revisi Unlimited',
-                'slug' => 'unlimited-revisions',
+                'name' => '🎥 Ngezoom Bareng',
+                'slug' => 'zoom-bareng',
                 'type' => 'percentage',
                 'price' => 15, // +15% dari harga paket
-                'description' => 'Revisi tanpa batas hingga Anda benar-benar puas (upgrade dari paket)',
+                'description' => 'Sesi Zoom tambahan untuk bahas materi sampai jelas (upgrade dari paket)',
                 'icon' => 'bi-arrow-repeat',
                 'sort_order' => 6
             ],
@@ -104,7 +106,10 @@ class AddonSeeder extends Seeder
         ];
 
         foreach ($addons as $addon) {
-            Addon::create($addon);
+            Addon::updateOrCreate(
+                ['slug' => $addon['slug']],
+                $addon
+            );
         }
     }
 }

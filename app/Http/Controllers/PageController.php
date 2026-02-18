@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Contact;
 use App\Models\Order;
 use App\Models\Portfolio;
 use App\Models\Service;
+use App\Models\Testimonial;
 use Illuminate\Http\Request;
 
 class PageController extends Controller
@@ -13,7 +15,8 @@ class PageController extends Controller
     {
         $services = Service::where('is_active', true)->take(6)->get();
         $portfolios = Portfolio::where('is_featured', true)->take(3)->get();
-        return view('pages.home', compact('services', 'portfolios'));
+        $testimonials = Testimonial::approved()->latest()->get();
+        return view('pages.home', compact('services', 'portfolios', 'testimonials'));
     }
 
     public function services()
@@ -72,14 +75,39 @@ class PageController extends Controller
             'message' => 'required|string|min:10'
         ]);
 
-        // TODO: Send email or store inquiry
-        // For now, redirect with success message
-        return redirect()->route('contact')->with('success', 'Pesan Anda telah dikirim!');
+        // Store contact message to database
+        $contact = Contact::create($validated);
+
+        return redirect()->route('contact')->with('success', 'Pesan Anda telah dikirim! Kami akan menghubungi Anda segera.');
     }
 
     public function disclaimer()
     {
         return view('pages.disclaimer');
+    }
+
+    public function storeTestimonial(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'rating' => 'required|integer|min:1|max:5',
+            'message' => 'required|string|min:10|max:1000'
+        ]);
+
+        $testimonial = Testimonial::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'rating' => $validated['rating'],
+            'message' => $validated['message'],
+            'is_approved' => true // Auto-approve for now, can be changed to require admin approval
+        ]);
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Terima kasih atas feedback Anda!',
+            'testimonial' => $testimonial
+        ]);
     }
 
     public function checkout(Request $request)

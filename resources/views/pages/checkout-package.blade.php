@@ -19,12 +19,13 @@
                 <input type="hidden" name="service_id" value="{{ $service->id }}">
                 <input type="hidden" name="package_id" id="package-id-input">
                 <input type="hidden" name="selected_addons" id="selected-addons-input">
+                <input type="hidden" name="payment_choice" id="payment-choice-input">
 
                 <div class="row">
                     <!-- Left Column -->
                     <div class="col-lg-8">
                         <!-- CUSTOMER INFO - PALING ATAS -->
-                        <div class="card shadow-sm mb-4" style="border: none; border-radius: 12px;">
+                        <div class="card checkout-card shadow-sm mb-4" style="border: none; border-radius: 12px;">
                             <div class="card-body p-4">
                                 <h5 class="fw-bold mb-4"><i class="bi bi-person-circle"></i> Informasi Anda</h5>
 
@@ -72,10 +73,11 @@
                             <div class="row g-4" id="pricing-plans">
                                 @foreach($service->activePackages as $package)
                                 <div class="col-lg-4">
-                                    <div class="pricing-card {{ $loop->iteration == 2 ? 'pricing-featured' : '' }}" 
+                                     <div class="pricing-card {{ $loop->iteration == 2 ? 'pricing-featured' : '' }}" 
                                          data-package-id="{{ $package->id }}" 
                                          data-price="{{ $package->price_per_unit }}" 
-                                         data-min-qty="{{ $package->min_quantity }}">
+                                         data-min-qty="{{ $package->min_quantity }}"
+                                         data-unit-label="{{ $package->unit_label }}">
                                         
                                         @if($loop->iteration == 2)
                                         <div class="pricing-badge">
@@ -96,6 +98,9 @@
                                         <div class="pricing-features">
                                             <h6 class="features-label mb-3">Keuntungan:</h6>
                                             <ul>
+                                                @if($package->unit_label === 'halaman')
+                                                    <li><i class="bi bi-check-circle-fill"></i> Harga per halaman</li>
+                                                @endif
                                                 @foreach($package->features ?? [] as $feature)
                                                     <li><i class="bi bi-check-circle-fill"></i> {{ $feature }}</li>
                                                 @endforeach
@@ -105,7 +110,7 @@
                                         @if($package->min_quantity > 1)
                                         <div class="min-info">
                                             <i class="bi bi-info-circle"></i>
-                                            <small>Min. {{ $package->min_quantity }} unit</small>
+                                            <small>Min. {{ $package->min_quantity }} {{ $package->unit_label }}</small>
                                         </div>
                                         @endif
 
@@ -120,7 +125,7 @@
                         </div>
 
                         <!-- QUANTITY -->
-                        <div class="card shadow-sm mb-4" style="border: none; border-radius: 12px;">
+                        <div class="card checkout-card shadow-sm mb-4" style="border: none; border-radius: 12px;">
                             <div class="card-body p-4">
                                 <label class="fw-bold mb-3"><i class="bi bi-calculator"></i> Berapa banyak yang Anda butuhkan?</label>
                                 <div class="qty-group">
@@ -133,7 +138,7 @@
                         </div>
 
                         <!-- ADD-ONS -->
-                        <div class="card shadow-sm mb-4" style="border: none; border-radius: 12px;">
+                        <div class="card checkout-card shadow-sm mb-4" style="border: none; border-radius: 12px;">
                             <div class="card-body p-4">
                                 <h5 class="fw-bold mb-4"><i class="bi bi-gift"></i> Tambahan Layanan (Opsional)</h5>
                                 <div class="row">
@@ -186,7 +191,7 @@
                     <!-- Right Column - STICKY SUMMARY -->
                     <div class="col-lg-4">
                         <div class="sticky-summary">
-                            <div class="card shadow-lg" style="border: none; border-radius: 12px;">
+                            <div class="card checkout-card shadow-lg" style="border: none; border-radius: 12px;">
                                 <div class="card-body p-4">
                                     <h5 class="fw-bold mb-4">Ringkasan Pesanan</h5>
 
@@ -206,7 +211,7 @@
                                             <span class="fw-bold" id="breakdown-package">Rp 0</span>
                                         </div>
                                         <div class="breakdown-item" id="breakdown-qty-item" style="display: none;">
-                                            <span><span id="qty-label">0</span> × Unit</span>
+                                            <span><span id="qty-label">0</span> × <span id="qty-unit-label">Unit</span></span>
                                             <span class="fw-bold" id="breakdown-calc">Rp 0</span>
                                         </div>
                                     </div>
@@ -242,6 +247,59 @@
         </div>
     </section>
 
+    <!-- ORDER CONFIRMATION MODAL -->
+    <div class="modal fade" id="orderConfirmModal" tabindex="-1" aria-labelledby="orderConfirmLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="orderConfirmLabel">Konfirmasi Pesanan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Layanan</span>
+                            <strong id="confirm-service">-</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Paket</span>
+                            <strong id="confirm-package">-</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Jumlah</span>
+                            <strong id="confirm-qty">-</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Subtotal</span>
+                            <strong id="confirm-subtotal">Rp 0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between" id="confirm-addons-row" style="display: none;">
+                            <span class="text-muted">Add-ons</span>
+                            <strong id="confirm-addons">Rp 0</strong>
+                        </div>
+                        <hr>
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted">Total</span>
+                            <strong id="confirm-total">Rp 0</strong>
+                        </div>
+                    </div>
+
+                    <div class="alert alert-info py-2 mb-0">
+                        <small>Silakan pilih metode pembayaran:</small>
+                    </div>
+                </div>
+                <div class="modal-footer d-flex flex-column gap-2">
+                    <button type="button" class="btn btn-outline-primary w-100" id="pay-dp-btn">
+                        Bayar DP 50% (<span id="confirm-dp">Rp 0</span>)
+                    </button>
+                    <button type="button" class="btn btn-primary w-100" id="pay-full-btn">
+                        Bayar Full (<span id="confirm-full">Rp 0</span>)
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <style>
         :root {
             --primary-color: #3498db;
@@ -257,6 +315,10 @@
         }
 
         /* PRICING CARDS */
+        .checkout-card {
+            height: auto;
+        }
+
         .pricing-card {
             background: white;
             border: 2px solid #e0e0e0;
@@ -745,6 +807,14 @@
         document.addEventListener('DOMContentLoaded', function() {
             let selectedPackage = null;
             let selectedAddons = [];
+            let isConfirmedSubmit = false;
+            let lastTotals = { packageSubtotal: 0, addonsTotal: 0, grandTotal: 0, quantity: 0, unitLabel: 'unit' };
+
+            // Ensure addons input has valid JSON by default
+            const addonsInput = document.getElementById('selected-addons-input');
+            if (addonsInput && !addonsInput.value) {
+                addonsInput.value = '[]';
+            }
 
             // Format Rupiah Helper
             function formatRupiah(number) {
@@ -761,6 +831,7 @@
                     const packageName = card.querySelector('.plan-name').textContent;
                     const packagePrice = parseFloat(card.dataset.price);
                     const minQty = parseInt(card.dataset.minQty);
+                    const unitLabel = card.dataset.unitLabel || 'unit';
 
                     // Remove selected class from all cards
                     document.querySelectorAll('.pricing-card').forEach(c => {
@@ -775,7 +846,8 @@
                         id: packageId,
                         name: packageName,
                         price: packagePrice,
-                        minQty: minQty
+                        minQty: minQty,
+                        unitLabel: unitLabel
                     };
 
                     // Update hidden input
@@ -794,7 +866,7 @@
 
                     // Update helper text
                     document.getElementById('qty-helper').textContent = 
-                        `Min. ${minQty} unit untuk paket ini`;
+                        `Min. ${minQty} ${unitLabel} untuk paket ini`;
 
                     // Update summary
                     updateSummary();
@@ -867,7 +939,7 @@
                 // Update package info in summary
                 document.getElementById('summary-package').textContent = selectedPackage.name;
                 document.getElementById('summary-details').textContent = 
-                    `${quantity} unit × ${formatRupiah(packagePrice)}`;
+                    `${quantity} ${selectedPackage.unitLabel} × ${formatRupiah(packagePrice)}`;
 
                 // Calculate package subtotal
                 const packageSubtotal = packagePrice * quantity;
@@ -875,6 +947,7 @@
                 // Update breakdown
                 document.getElementById('breakdown-package').textContent = formatRupiah(packagePrice);
                 document.getElementById('qty-label').textContent = quantity;
+                document.getElementById('qty-unit-label').textContent = selectedPackage.unitLabel;
                 document.getElementById('breakdown-calc').textContent = formatRupiah(packageSubtotal);
                 document.getElementById('breakdown-qty-item').style.display = 'flex';
 
@@ -919,6 +992,15 @@
                 const grandTotal = packageSubtotal + addonsTotal;
                 document.getElementById('grand-total').textContent = formatRupiah(grandTotal);
 
+                // Store totals for confirmation modal
+                lastTotals = {
+                    packageSubtotal,
+                    addonsTotal,
+                    grandTotal,
+                    quantity,
+                    unitLabel: selectedPackage.unitLabel
+                };
+
                 // Update hidden input for add-ons
                 const addonsWithCalculatedPrice = selectedAddons.map(a => {
                     let price = 0;
@@ -941,6 +1023,11 @@
 
             // FORM SUBMISSION
             document.getElementById('checkout-form').addEventListener('submit', function(e) {
+                if (isConfirmedSubmit) {
+                    isConfirmedSubmit = false;
+                    return true;
+                }
+
                 if (!selectedPackage) {
                     e.preventDefault();
                     alert('Silakan pilih paket terlebih dahulu!');
@@ -961,6 +1048,43 @@
                     alert('Ukuran file maksimal 10MB!');
                     return false;
                 }
+
+                // Show confirmation modal
+                e.preventDefault();
+                openConfirmModal();
+            });
+
+            function openConfirmModal() {
+                document.getElementById('confirm-service').textContent = '{{ $service->name }}';
+                document.getElementById('confirm-package').textContent = selectedPackage.name;
+                document.getElementById('confirm-qty').textContent = `${lastTotals.quantity} ${lastTotals.unitLabel}`;
+                document.getElementById('confirm-subtotal').textContent = formatRupiah(lastTotals.packageSubtotal);
+
+                if (lastTotals.addonsTotal > 0) {
+                    document.getElementById('confirm-addons-row').style.display = 'flex';
+                    document.getElementById('confirm-addons').textContent = formatRupiah(lastTotals.addonsTotal);
+                } else {
+                    document.getElementById('confirm-addons-row').style.display = 'none';
+                }
+
+                document.getElementById('confirm-total').textContent = formatRupiah(lastTotals.grandTotal);
+                document.getElementById('confirm-dp').textContent = formatRupiah(lastTotals.grandTotal * 0.5);
+                document.getElementById('confirm-full').textContent = formatRupiah(lastTotals.grandTotal);
+
+                const modal = new bootstrap.Modal(document.getElementById('orderConfirmModal'));
+                modal.show();
+            }
+
+            document.getElementById('pay-dp-btn').addEventListener('click', function() {
+                document.getElementById('payment-choice-input').value = 'dp';
+                isConfirmedSubmit = true;
+                document.getElementById('checkout-form').submit();
+            });
+
+            document.getElementById('pay-full-btn').addEventListener('click', function() {
+                document.getElementById('payment-choice-input').value = 'full';
+                isConfirmedSubmit = true;
+                document.getElementById('checkout-form').submit();
             });
 
             // Initialize - disable controls until package is selected

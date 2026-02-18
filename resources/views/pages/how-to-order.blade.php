@@ -167,7 +167,7 @@
                                     <ul>
                                         <li>Kami akan menunjukkan hasil kerja</li>
                                         <li>Berikan feedback dan permintaan revisi</li>
-                                        <li>Revisi unlimited hingga Anda puas (sesuai scope)</li>
+                                        <li>Ngezoom bareng sampai jelas (sesuai scope)</li>
                                         <li>Setelah final, file dikirimkan</li>
                                     </ul>
                                 </div>
@@ -188,31 +188,57 @@
 
             <div class="row">
                 <div class="col-lg-8 offset-lg-2">
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="bi bi-question-circle"></i> Berapa lama proses pengerjaan?</h6>
-                            <p class="card-text">Waktu pengerjaan tergantung kompleksitas dan deadline yang Anda minta. Kami akan diskusikan detail timeline saat konfirmasi.</p>
+                    <div class="accordion" id="faqAccordion">
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqOne">
+                                <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#faqOneCollapse" aria-expanded="true" aria-controls="faqOneCollapse">
+                                    <i class="bi bi-question-circle me-2"></i> Berapa lama proses pengerjaan?
+                                </button>
+                            </h2>
+                            <div id="faqOneCollapse" class="accordion-collapse collapse show" aria-labelledby="faqOne" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Waktu pengerjaan tergantung kompleksitas dan deadline yang Anda minta. Kami akan diskusikan detail timeline saat konfirmasi.
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="bi bi-question-circle"></i> Apakah ada revisi?</h6>
-                            <p class="card-text">Ya, revisi unlimited hingga Anda puas (sesuai dengan scope pekerjaan yang disepakati).</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqTwo">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqTwoCollapse" aria-expanded="false" aria-controls="faqTwoCollapse">
+                                    <i class="bi bi-question-circle me-2"></i> Apakah ada revisi?
+                                </button>
+                            </h2>
+                            <div id="faqTwoCollapse" class="accordion-collapse collapse" aria-labelledby="faqTwo" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ya, bisa ngezoom bareng sampai jelas (sesuai dengan scope pekerjaan yang disepakati).
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="bi bi-question-circle"></i> Apakah ada jaminan kualitas?</h6>
-                            <p class="card-text">Ya, kami menjamin hasil berkualitas tinggi sesuai dengan standar yang disepakati bersama.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqThree">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqThreeCollapse" aria-expanded="false" aria-controls="faqThreeCollapse">
+                                    <i class="bi bi-question-circle me-2"></i> Apakah ada jaminan kualitas?
+                                </button>
+                            </h2>
+                            <div id="faqThreeCollapse" class="accordion-collapse collapse" aria-labelledby="faqThree" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Ya, kami menjamin hasil berkualitas tinggi sesuai dengan standar yang disepakati bersama.
+                                </div>
+                            </div>
                         </div>
-                    </div>
 
-                    <div class="card mb-3">
-                        <div class="card-body">
-                            <h6 class="card-title"><i class="bi bi-question-circle"></i> Bagaimana dengan kerahasiaan proyek?</h6>
-                            <p class="card-text">Semua proyek dijaga kerahasiaannya sesuai dengan perjanjian kontrak. Kami tidak akan membagikan detail proyek tanpa izin Anda.</p>
+                        <div class="accordion-item">
+                            <h2 class="accordion-header" id="faqFour">
+                                <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faqFourCollapse" aria-expanded="false" aria-controls="faqFourCollapse">
+                                    <i class="bi bi-question-circle me-2"></i> Bagaimana dengan kerahasiaan proyek?
+                                </button>
+                            </h2>
+                            <div id="faqFourCollapse" class="accordion-collapse collapse" aria-labelledby="faqFour" data-bs-parent="#faqAccordion">
+                                <div class="accordion-body">
+                                    Semua proyek dijaga kerahasiaannya sesuai dengan perjanjian kontrak. Kami tidak akan membagikan detail proyek tanpa izin Anda.
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

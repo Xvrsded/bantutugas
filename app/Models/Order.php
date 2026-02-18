@@ -22,6 +22,10 @@ class Order extends Model
         'quantity',
         'unit_quantity',
         'payment_method',
+        'payment_choice',
+        'dp_percentage',
+        'dp_amount',
+        'remaining_amount',
         'attachment',
         'status',
         'notes',
@@ -61,7 +65,9 @@ class Order extends Model
         'package_price' => 'decimal:2',
         'addons_total' => 'decimal:2',
         'subtotal' => 'decimal:2',
-        'admin_adjusted_price' => 'decimal:2'
+        'admin_adjusted_price' => 'decimal:2',
+        'dp_amount' => 'decimal:2',
+        'remaining_amount' => 'decimal:2'
     ];
 
     public function service()

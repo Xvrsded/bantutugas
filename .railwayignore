@@ -1,0 +1,7 @@
+# Railway ignore file
+node_modules
+.git
+storage/logs/*
+bootstrap/cache/*
+vendor/bin/phpunit
+.env.local

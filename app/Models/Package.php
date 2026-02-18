@@ -29,6 +29,24 @@ class Package extends Model
         'min_quantity' => 'integer'
     ];
 
+    public function getFeaturesAttribute($value)
+    {
+        if (is_array($value)) {
+            return $value;
+        }
+
+        if ($value === null) {
+            return [];
+        }
+
+        if (is_string($value)) {
+            $decoded = json_decode($value, true);
+            return is_array($decoded) ? $decoded : [];
+        }
+
+        return [];
+    }
+
     // Relationships
     public function service()
     {

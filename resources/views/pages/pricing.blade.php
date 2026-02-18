@@ -84,7 +84,7 @@
                                 <li class="mb-2">✓ Harga di atas adalah harga dasar</li>
                                 <li class="mb-2">✓ Harga dapat berubah tergantung kompleksitas</li>
                                 <li class="mb-2">✓ Konsultasi gratis sebelum pengerjaan</li>
-                                <li class="mb-2">✓ Revisi unlimited hingga puas</li>
+                                <li class="mb-2">✓ Ngezoom bareng hingga jelas</li>
                                 <li class="mb-2">✓ Cicilan tersedia untuk proyek besar</li>
                             </ul>
                         </div>
