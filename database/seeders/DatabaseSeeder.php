@@ -146,6 +146,12 @@ class DatabaseSeeder extends Seeder
             'is_active' => true
         ]);
 
+        // Seed Packages for all services
+        $this->call(PackageSeeder::class);
+
+        // Seed Add-ons
+        $this->call(AddonSeeder::class);
+
         // Create Portfolio
         Portfolio::create([
             'title' => 'Sistem Monitoring Suhu Real-time IoT',

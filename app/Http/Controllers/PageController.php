@@ -82,8 +82,19 @@ class PageController extends Controller
         return view('pages.disclaimer');
     }
 
-    public function checkout()
+    public function checkout(Request $request)
     {
+        $serviceId = $request->get('service');
+        
+        // If service ID provided, load service with packages and addons
+        if ($serviceId) {
+            $service = \App\Models\Service::with('activePackages')->findOrFail($serviceId);
+            $addons = \App\Models\Addon::active()->get();
+            
+            return view('pages.checkout-package', compact('service', 'addons'));
+        }
+        
+        // Otherwise, show cart-based checkout (legacy)
         return view('pages.checkout');
     }
 }

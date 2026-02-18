@@ -101,13 +101,17 @@
                                 </div>
                                 <h5 class="card-title">{{ $service->name }}</h5>
                                 <p class="card-text text-muted">{{ Str::limit($service->description, 80) }}</p>
+                                @php
+                                    $priceRange = $service->priceRange;
+                                @endphp
                                 <p class="text-danger fw-bold">
-                                    Rp {{ number_format($service->price_start, 0, ',', '.') }}
-                                    @if ($service->price_end)
-                                        - Rp {{ number_format($service->price_end, 0, ',', '.') }}
+                                    Rp {{ number_format($priceRange['min'], 0, ',', '.') }}
+                                    @if ($priceRange['min'] != $priceRange['max'])
+                                        - Rp {{ number_format($priceRange['max'], 0, ',', '.') }}
                                     @endif
+                                    <small class="text-muted d-block" style="font-size: 0.8rem;">per unit</small>
                                 </p>
-                                <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-sm btn-primary">
+                                <a href="{{ route('checkout', ['service' => $service->id]) }}" class="btn btn-sm btn-primary">
                                     <i class="bi bi-cart-plus"></i> Pesan Sekarang
                                 </a>
                             </div>
