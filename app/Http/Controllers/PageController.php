@@ -18,13 +18,22 @@ class PageController extends Controller
 
     public function services()
     {
-        $academicServices = Service::where('category', 'like', 'academic%')
-            ->where('is_active', true)
-            ->get();
+        $academicServices = Service::where('is_active', true)
+            ->get()
+            ->filter(function($service) {
+                return stripos($service->category, 'academic') !== false || stripos($service->category, 'tugas') !== false;
+            });
         
-        $techServices = Service::where('category', 'like', 'tech%')
-            ->where('is_active', true)
-            ->get();
+        $techServices = Service::where('is_active', true)
+            ->get()
+            ->filter(function($service) {
+                return stripos($service->category, 'tech') !== false || stripos($service->category, 'programming') !== false || stripos($service->category, 'web') !== false || stripos($service->category, 'iot') !== false;
+            });
+
+        // If no separation, show all as one category
+        if ($academicServices->isEmpty() && $techServices->isEmpty()) {
+            $academicServices = Service::where('is_active', true)->get();
+        }
 
         return view('pages.services', compact('academicServices', 'techServices'));
     }
