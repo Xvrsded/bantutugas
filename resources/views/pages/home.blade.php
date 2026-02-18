@@ -122,62 +122,83 @@
 
             <div class="payment-carousel">
                 <div class="payment-slider">
-                    <!-- E-Wallet -->
+                    <!-- E-Wallet: OVO -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #1e3a5f;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%);">
+                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">O</span>
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
+
+                    <!-- E-Wallet: GoPay -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #00b4e6;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="40" height="40">
+                                <circle cx="20" cy="20" r="12" fill="white"/>
+                                <path d="M35 30 L50 15 L50 35 Z" fill="white"/>
+                            </svg>
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
+
+                    <!-- E-Wallet: Dana -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #0099ff;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #0099ff 0%, #0077ff 100%);">
+                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">D</span>
                         </div>
                         <p class="payment-name">Dana</p>
                     </div>
+
+                    <!-- E-Wallet: LinkAja -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #ff5722;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #ff5722 0%, #ff7043 100%);">
+                            <span style="font-size: 1.8rem; font-weight: bold; color: white;">LA</span>
                         </div>
                         <p class="payment-name">LinkAja</p>
                     </div>
 
-                    <!-- Banks -->
+                    <!-- Bank: Mandiri -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-building" style="font-size: 2.5rem; color: #e74c3c;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);">
+                            <span style="font-size: 2rem; font-weight: bold; color: white;">BTN</span>
                         </div>
                         <p class="payment-name">Mandiri</p>
                     </div>
+
+                    <!-- Bank: SeaBank -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-building" style="font-size: 2.5rem; color: #1e90ff;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #1e90ff 0%, #1873cc 100%);">
+                            <span style="font-size: 2.2rem; font-weight: bold; color: white;">≈</span>
                         </div>
                         <p class="payment-name">SeaBank</p>
                     </div>
+
+                    <!-- Bank: Bank Jago -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-building" style="font-size: 2.5rem; color: #00a8e8;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #00a8e8 0%, #0088cc 100%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="35" height="35">
+                                <path d="M30 10 L45 25 L45 50 L15 50 L15 25 Z" fill="white"/>
+                                <rect x="20" y="30" width="10" height="12" fill="#00a8e8"/>
+                                <rect x="32" y="30" width="10" height="12" fill="#00a8e8"/>
+                            </svg>
                         </div>
                         <p class="payment-name">Bank Jago</p>
                     </div>
 
                     <!-- Duplicate for seamless loop -->
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #1e3a5f;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #550099 0%, #7c3aed 100%);">
+                            <span style="font-size: 2.5rem; font-weight: bold; color: white;">O</span>
                         </div>
                         <p class="payment-name">OVO</p>
                     </div>
+
                     <div class="payment-item">
-                        <div class="payment-logo">
-                            <i class="bi bi-wallet2" style="font-size: 2.5rem; color: #00b4e6;"></i>
+                        <div class="payment-logo" style="background: linear-gradient(135deg, #00b4e6 0%, #0099ff 100%);">
+                            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 60 60" width="40" height="40">
+                                <circle cx="20" cy="20" r="12" fill="white"/>
+                                <path d="M35 30 L50 15 L50 35 Z" fill="white"/>
+                            </svg>
                         </div>
                         <p class="payment-name">GoPay</p>
                     </div>
@@ -228,6 +249,9 @@
                     justify-content: center;
                     margin-bottom: 0.5rem;
                     transition: all 0.3s ease;
+                    font-weight: bold;
+                    color: #1e3a5f;
+                    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
                 }
 
                 .payment-item:hover .payment-logo {
