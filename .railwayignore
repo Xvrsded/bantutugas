@@ -5,3 +5,4 @@ storage/logs/*
 bootstrap/cache/*
 vendor/bin/phpunit
 .env.local
+Procfile
