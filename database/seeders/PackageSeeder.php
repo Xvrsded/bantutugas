@@ -80,23 +80,55 @@ class PackageSeeder extends Seeder
 
     private function getBasePrice($serviceName)
     {
-        // Base price per unit (halaman/soal/project) based on service name
+        // Harga per unit berdasarkan tipe service (STANDAR PASAR INDONESIA 2026)
         $serviceName = strtolower($serviceName);
         
-        if (str_contains($serviceName, 'essay') || str_contains($serviceName, 'esai')) {
-            return 15000;
+        // ACADEMIC - Per Halaman/Unit
+        if (str_contains($serviceName, 'makalah')) {
+            return 7500; // 5k-10k/halaman → average 7.5k
+        } elseif (str_contains($serviceName, 'proposal')) {
+            return 15000; // 15k/halaman standar
         } elseif (str_contains($serviceName, 'skripsi') || str_contains($serviceName, 'thesis')) {
-            return 25000;
-        } elseif (str_contains($serviceName, 'coding') || str_contains($serviceName, 'programming')) {
-            return 75000;
-        } elseif (str_contains($serviceName, 'design') || str_contains($serviceName, 'desain')) {
-            return 50000;
+            return 20000; // 20k/halaman
+        } elseif (str_contains($serviceName, 'tesis')) {
+            return 30000; // 30k/halaman (tertinggi)
+        }
+        
+        // ASSIGNMENTS - Per Paket
+        else if (str_contains($serviceName, 'tugas') || str_contains($serviceName, 'homework')) {
+            return 75000; // 25k-120k → average 75k
+        } elseif (str_contains($serviceName, 'essay') || str_contains($serviceName, 'esai')) {
+            return 12000; // Per halaman
+        } elseif (str_contains($serviceName, 'ulangan') || str_contains($serviceName, 'test')) {
+            return 50000; // Per set
+        } elseif (str_contains($serviceName, 'kuis')) {
+            return 30000; // Per kuis
+        }
+        
+        // TECHNOLOGY - Per Level/Project
+        else if (str_contains($serviceName, 'iot') || str_contains($serviceName, 'mikrokontroler')) {
+            return 500000; // 250k-900k → average 500k
+        } elseif (str_contains($serviceName, 'programming') || str_contains($serviceName, 'coding')) {
+            return 350000; // Per project
+        } elseif (str_contains($serviceName, 'web') || str_contains($serviceName, 'website')) {
+            return 300000; // Per fitur/page
+        } elseif (str_contains($serviceName, 'mobile') || str_contains($serviceName, 'app')) {
+            return 400000; // Per fitur
+        }
+        
+        // OTHER
+        else if (str_contains($serviceName, 'design') || str_contains($serviceName, 'desain')) {
+            return 100000; // Per desain
         } elseif (str_contains($serviceName, 'presentation') || str_contains($serviceName, 'ppt')) {
-            return 20000;
-        } elseif (str_contains($serviceName, 'video')) {
-            return 40000;
-        } else {
-            return 12000; // Default
+            return 50000; // Per slide set (20 slides)
+        } elseif (str_contains($serviceName, 'video') || str_contains($serviceName, 'editing')) {
+            return 200000; // Per menit
+        } elseif (str_contains($serviceName, 'translasi') || str_contains($serviceName, 'translation')) {
+            return 8000; // Per 100 kata
+        }
+        
+        else {
+            return 50000; // Default fallback
         }
     }
 }

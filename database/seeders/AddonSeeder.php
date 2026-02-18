@@ -9,69 +9,97 @@ class AddonSeeder extends Seeder
 {
     public function run(): void
     {
+        // ADD-ONS REALISTIS SESUAI STANDAR PASAR INDONESIA 2026
         $addons = [
             [
-                'name' => 'Express (24 Jam)',
-                'slug' => 'express',
+                'name' => '⚡ Express 24 Jam',
+                'slug' => 'express-24',
                 'type' => 'percentage',
-                'price' => 50, // 50% extra
-                'description' => 'Pengerjaan diprioritaskan dan selesai dalam 24 jam',
+                'price' => 20, // +20% dari harga paket
+                'description' => 'Pengerjaan dipercepat, selesai dalam 24 jam (tidak termasuk hari libur)',
                 'icon' => 'bi-lightning-charge-fill',
                 'sort_order' => 1
             ],
             [
-                'name' => 'Turnitin Check',
-                'slug' => 'turnitin',
-                'type' => 'fixed',
-                'price' => 50000,
-                'description' => 'Cek plagiarisme dengan Turnitin + laporan similarity',
-                'icon' => 'bi-shield-check',
+                'name' => '🌍 Bahasa Inggris',
+                'slug' => 'english-version',
+                'type' => 'percentage',
+                'price' => 30, // +30% dari harga paket
+                'description' => 'Dikerjakan dalam bahasa Inggris yang baik dan profesional',
+                'icon' => 'bi-globe',
                 'sort_order' => 2
             ],
             [
-                'name' => 'English Version',
-                'slug' => 'english',
-                'type' => 'percentage',
-                'price' => 30, // 30% extra
-                'description' => 'Tugas dikerjakan dalam bahasa Inggris',
-                'icon' => 'bi-globe',
+                'name' => '📋 Turnitin Check',
+                'slug' => 'turnitin-check',
+                'type' => 'fixed',
+                'price' => 25000, // Rp 25k fixed
+                'description' => 'Cek plagiarisme lengkap dengan laporan similarity dari Turnitin',
+                'icon' => 'bi-shield-check',
                 'sort_order' => 3
             ],
             [
-                'name' => 'Penjelasan Detail',
-                'slug' => 'explanation',
-                'type' => 'per_unit',
-                'price' => 5000, // Per halaman/soal
-                'description' => 'Disertai langkah-langkah penyelesaian lengkap',
-                'icon' => 'bi-file-text',
+                'name' => '📊 Analisis Statistik',
+                'slug' => 'statistics-analysis',
+                'type' => 'fixed',
+                'price' => 150000, // Rp 150k fixed (kompleks)
+                'description' => 'Ditambahkan analisis data & grafik statistik berkualitas SPSS/Excel',
+                'icon' => 'bi-bar-chart',
                 'sort_order' => 4
             ],
             [
-                'name' => 'Konsultasi Bimbingan',
-                'slug' => 'consultation',
+                'name' => '💻 Source Code & Demo',
+                'slug' => 'source-code-demo',
                 'type' => 'fixed',
-                'price' => 100000,
-                'description' => 'Sesi konsultasi 1 jam via video call',
-                'icon' => 'bi-camera-video',
+                'price' => 200000, // Rp 200k fixed (kompleks)
+                'description' => 'Source code lengkap + demo aplikasi + dokumentasi teknis',
+                'icon' => 'bi-code-slash',
                 'sort_order' => 5
             ],
             [
-                'name' => 'Revisi Unlimited',
-                'slug' => 'unlimited_revision',
+                'name' => '🔄 Revisi Unlimited',
+                'slug' => 'unlimited-revisions',
                 'type' => 'percentage',
-                'price' => 20, // 20% extra
-                'description' => 'Revisi tanpa batas hingga Anda puas',
+                'price' => 15, // +15% dari harga paket
+                'description' => 'Revisi tanpa batas hingga Anda benar-benar puas (upgrade dari paket)',
                 'icon' => 'bi-arrow-repeat',
                 'sort_order' => 6
             ],
             [
-                'name' => 'Presentasi PPT',
-                'slug' => 'presentation',
+                'name' => '📑 Format & Finishing',
+                'slug' => 'formatting-finishing',
                 'type' => 'fixed',
-                'price' => 75000,
-                'description' => 'Dibuatkan slide presentasi PowerPoint',
-                'icon' => 'bi-file-earmark-slides',
+                'price' => 50000, // Rp 50k fixed
+                'description' => 'Formatting sempurna sesuai standar, daftar isi otomatis, margin presisi',
+                'icon' => 'bi-file-earmark-richtext',
                 'sort_order' => 7
+            ],
+            [
+                'name' => '📹 Video Penjelasan',
+                'slug' => 'video-explanation',
+                'type' => 'fixed',
+                'price' => 75000, // Rp 75k fixed
+                'description' => 'Video penjelasan 10-15 menit cara penyelesaian & teori penting',
+                'icon' => 'bi-play-circle',
+                'sort_order' => 8
+            ],
+            [
+                'name' => '🎤 Konsultasi 1 Jam',
+                'slug' => 'consultation-1hour',
+                'type' => 'fixed',
+                'price' => 100000, // Rp 100k fixed
+                'description' => 'Sesi bimbingan langsung 1 jam via Zoom/WhatsApp call',
+                'icon' => 'bi-camera-video',
+                'sort_order' => 9
+            ],
+            [
+                'name' => '🎨 Presentasi Slide Pro',
+                'slug' => 'presentation-pro',
+                'type' => 'fixed',
+                'price' => 120000, // Rp 120k fixed
+                'description' => 'Slide presentasi profesional + animasi + script presentasi',
+                'icon' => 'bi-file-earmark-slides',
+                'sort_order' => 10
             ]
         ];
 
