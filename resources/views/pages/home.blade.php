@@ -107,7 +107,7 @@
                                         - Rp {{ number_format($service->price_end, 0, ',', '.') }}
                                     @endif
                                 </p>
-                                <a href="{{ route('order.create', $service) }}" class="btn btn-sm btn-primary">
+                                <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-sm btn-primary">
                                     <i class="bi bi-cart-plus"></i> Pesan Sekarang
                                 </a>
                             </div>

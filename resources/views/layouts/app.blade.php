@@ -316,6 +316,360 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{{ asset('js/cart.js') }}"></script>
+    
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Pesanan</h5>
+                <button type="button" class="btn-close" onclick="closeConfirmationModal()"></button>
+            </div>
+            <div class="modal-body">
+                <p>Anda akan menambahkan layanan berikut ke keranjang:</p>
+                <div style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin: 1rem 0;">
+                    <h6 id="confirm-service-name" style="margin-bottom: 0.5rem;"></h6>
+                    <p id="confirm-service-price" style="font-size: 1.3rem; font-weight: 700; color: var(--primary-color); margin: 0;"></p>
+                </div>
+                <p class="text-muted small">Anda dapat mengubah jumlah pesanan dan menambah layanan lain di keranjang sebelum checkout.</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" onclick="closeConfirmationModal()">Batal</button>
+                <button type="button" class="btn btn-primary" onclick="confirmAddToCart()">
+                    <i class="bi bi-cart-plus"></i> Tambahkan ke Keranjang
+                </button>
+            </div>
+            <input type="hidden" id="confirm-service-id">
+            <input type="hidden" id="confirm-service-price-value">
+        </div>
+    </div>
+
+    <!-- Floating Cart Widget -->
+    <div id="cart-widget" class="cart-widget">
+        <button id="cart-toggle" class="cart-toggle" title="Buka Keranjang">
+            <i class="bi bi-cart3"></i>
+            <span id="cart-count" class="cart-count" style="display: none;">0</span>
+        </button>
+        <div class="cart-panel">
+            <div class="cart-header">
+                <h6>Keranjang Belanja</h6>
+                <button type="button" class="btn-close-cart" onclick="document.getElementById('cart-widget').classList.remove('open')" style="font-size: 1.2rem; background: none; border: none; cursor: pointer;">×</button>
+            </div>
+            <div id="cart-items" class="cart-items">
+                <p class="text-muted text-center p-3">Keranjang kosong</p>
+            </div>
+            <div id="cart-total" class="cart-footer">
+                <!-- Total akan di-render oleh JS -->
+            </div>
+        </div>
+    </div>
+
+    <style>
+        /* Cart Widget Styles */
+        .cart-widget {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            z-index: 999;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        .cart-toggle {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(30, 58, 95, 0.3);
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .cart-toggle:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+            box-shadow: 0 6px 16px rgba(30, 58, 95, 0.4);
+        }
+
+        .cart-count {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background-color: #e74c3c;
+            color: white;
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 0.85rem;
+        }
+
+        .cart-panel {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.15);
+            max-height: 0;
+            overflow: hidden;
+            opacity: 0;
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cart-widget.open .cart-panel {
+            max-height: 500px;
+            opacity: 1;
+        }
+
+        .cart-header {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--primary-color);
+            color: white;
+            border-radius: 12px 12px 0 0;
+        }
+
+        .cart-header h6 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .cart-items {
+            overflow-y: auto;
+            flex: 1;
+            max-height: 300px;
+        }
+
+        .cart-item-card {
+            padding: 1rem;
+            border-bottom: 1px solid #e9ecef;
+            background: #fff;
+        }
+
+        .cart-item-card:hover {
+            background-color: #f8f9fa;
+        }
+
+        .cart-item-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-header strong {
+            flex: 1;
+            font-size: 0.95rem;
+            color: #333;
+        }
+
+        .btn-remove {
+            background: none;
+            border: none;
+            color: #e74c3c;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            line-height: 1;
+        }
+
+        .btn-remove:hover {
+            color: #c0392b;
+        }
+
+        .cart-item-price {
+            color: var(--secondary-color);
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .cart-item-quantity {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+            align-items: center;
+        }
+
+        .cart-item-quantity button {
+            background-color: #e9ecef;
+            border: none;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 700;
+            transition: background-color 0.2s;
+        }
+
+        .cart-item-quantity button:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .cart-item-quantity input {
+            width: 40px;
+            text-align: center;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+
+        .cart-item-subtotal {
+            font-size: 0.85rem;
+            color: #555;
+            text-align: right;
+        }
+
+        .cart-footer {
+            padding: 1rem;
+            background-color: #f8f9fa;
+            border-top: 1px solid #e9ecef;
+            border-radius: 0 0 12px 12px;
+        }
+
+        .cart-total-section {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .total-items, .total-price {
+            font-size: 0.9rem;
+            color: #555;
+        }
+
+        .total-price {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 90%;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-title {
+            margin: 0;
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+
+        .btn-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #666;
+        }
+
+        .modal-body {
+            padding: 1.5rem;
+        }
+
+        .modal-footer {
+            padding: 1.5rem;
+            border-top: 1px solid #e9ecef;
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 100px;
+            right: 20px;
+            background-color: var(--primary-color);
+            color: white;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 998;
+        }
+
+        .toast-notification.show {
+            opacity: 1;
+        }
+
+        @media (max-width: 576px) {
+            .cart-widget {
+                bottom: 1rem;
+                right: 1rem;
+            }
+
+            .cart-toggle {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+
+            .cart-panel {
+                width: 300px;
+            }
+
+            .modal-content {
+                width: 95%;
+            }
+        }
+    </style>
+
     @yield('extra-js')
 </body>
 </html>

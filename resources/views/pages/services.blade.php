@@ -54,7 +54,7 @@
                                             - Rp {{ number_format($service->price_end, 0, ',', '.') }}
                                         @endif
                                     </p>
-                                    <a href="{{ route('order.create', $service) }}" class="btn btn-primary">
+                                    <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-primary">
                                         <i class="bi bi-cart-plus"></i> Pesan
                                     </a>
                                 </div>
@@ -113,23 +113,9 @@
                                             - Rp {{ number_format($service->price_end, 0, ',', '.') }}
                                         @endif
                                     </p>
-                                    <a href="{{ route('order.create', $service) }}" class="btn btn-primary">
+                                    <a href="javascript:void(0)" onclick="addToCart({{ $service->id }}, '{{ $service->name }}', {{ $service->price_start }})" class="btn btn-primary">
                                         <i class="bi bi-cart-plus"></i> Pesan
                                     </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                @empty
-                    <div class="col-12 text-center py-5">
-                        <p class="text-muted">Layanan teknis tidak tersedia.</p>
-                    </div>
-                @endforelse
-            </div>
-        </div>
-    </section>
-
-    <!-- Why Choose Us -->
     <section class="py-5 bg-light">
         <div class="container">
             <div class="section-title">
