@@ -234,7 +234,8 @@
     <!-- Sidebar -->
     <aside class="sidebar">
         <div class="sidebar-brand">
-            <i class="bi bi-speedometer2"></i> Admin Panel
+            <img src="{{ asset('logo.svg') }}" alt="bantutugas" style="height: 35px; margin-right: 10px;">
+            <span>Admin Panel</span>
         </div>
         <ul class="sidebar-menu">
             <li>
