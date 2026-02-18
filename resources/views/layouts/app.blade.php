@@ -12,9 +12,9 @@
     
     <style>
         :root {
-            --primary-color: #2c3e50;
-            --secondary-color: #e74c3c;
-            --accent-color: #3498db;
+            --primary-color: #1e3a5f;
+            --secondary-color: #0066cc;
+            --accent-color: #00d4ff;
             --success-color: #27ae60;
             --light-bg: #ecf0f1;
         }
@@ -73,8 +73,8 @@
         }
 
         .btn-primary:hover {
-            background-color: #c0392b;
-            border-color: #c0392b;
+            background-color: #004a99;
+            border-color: #004a99;
         }
 
         .btn-outline-primary {
