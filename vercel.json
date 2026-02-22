@@ -1,31 +1,21 @@
 {
-  "version": 2,
-  "buildCommand": "npm run build",
-  "builds": [
-    {
-      "src": "api/index.php",
-      "use": "vercel-php@0.9.0"
-    },
-    {
-      "src": "api/diag.php",
-      "use": "vercel-php@0.9.0"
-    },
-    {
-      "src": "public/**",
-      "use": "@vercel/static"
+  "functions": {
+    "api/*.php": {
+      "runtime": "vercel-php@0.9.0"
     }
-  ],
+  },
   "routes": [
-    {
-      "src": "/__diag",
-      "dest": "/api/diag.php"
-    },
     {
       "src": "/build/(.*)",
       "dest": "/public/build/$1"
     },
     {
-      "handle": "filesystem"
+      "src": "/(favicon.ico|robots.txt|logo.svg|payment-logos.html)",
+      "dest": "/public/$1"
+    },
+    {
+      "src": "/(.*\\.(css|js|mjs|map|png|jpg|jpeg|gif|svg|ico|webp|txt|xml|woff|woff2|ttf|eot))",
+      "dest": "/public/$1"
     },
     {
       "src": "/(.*)",
