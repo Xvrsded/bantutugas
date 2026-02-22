@@ -121,7 +121,7 @@
                     </div>
 
                     <div class="alert alert-info">
-                        <i class="bi bi-info-circle"></i> Jika ada pertanyaan tentang disclaimer ini, silakan hubungi kami melalui <a href="https://wa.me/6281234567890" target="_blank">WhatsApp</a> atau <a href="mailto:support@academictechsupport.com">email</a>.
+                        <i class="bi bi-info-circle"></i> Jika ada pertanyaan tentang disclaimer ini, silakan hubungi kami melalui <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank">WhatsApp</a> atau <a href="mailto:support@academictechsupport.com">email</a>.
                     </div>
                 </div>
             </div>

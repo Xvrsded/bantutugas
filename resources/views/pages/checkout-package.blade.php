@@ -3,6 +3,15 @@
 @section('title', 'Checkout - ' . $service->name)
 
 @section('content')
+    @php
+        $paymentChannels = collect(config('payment.channels', []));
+        $gatewayChannels = $paymentChannels->where('type', 'gateway')->values();
+        $bankChannels = $paymentChannels->where('type', 'bank')->values();
+        $ewalletChannels = $paymentChannels->where('type', 'ewallet')->values();
+        $hasPaymentChannel = $paymentChannels->isNotEmpty();
+        $paymentFees = config('payment.fees', ['bank' => 2500, 'ewallet' => 1200]);
+    @endphp
+
     <!-- Checkout Header -->
     <section style="background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%); color: white; padding: 3rem 0;">
         <div class="container">
@@ -20,6 +29,7 @@
                 <input type="hidden" name="package_id" id="package-id-input">
                 <input type="hidden" name="selected_addons" id="selected-addons-input">
                 <input type="hidden" name="payment_choice" id="payment-choice-input">
+                <input type="hidden" name="payment_channel" id="payment-channel-input">
 
                 <div class="row">
                     <!-- Left Column -->
@@ -238,6 +248,47 @@
                                     <small class="text-muted d-block mt-3 text-center">
                                         <i class="bi bi-auto-reboot"></i> Update otomatis
                                     </small>
+
+                                    <hr>
+                                    <h6 class="fw-bold mb-2"><i class="bi bi-wallet2"></i> Tujuan Pembayaran</h6>
+
+                                    @if ($hasPaymentChannel)
+                                        @if ($gatewayChannels->isNotEmpty())
+                                            <small class="text-muted d-block mb-1">Auto Payment Gateway (biaya admin Rp {{ number_format($paymentFees['gateway'] ?? 0, 0, ',', '.') }})</small>
+                                            @foreach ($gatewayChannels as $channel)
+                                                <div class="small mb-2">
+                                                    <strong>{{ $channel['name'] }}</strong><br>
+                                                    {{ $channel['description'] ?? 'Pembayaran digital otomatis dan aman.' }}
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+                                        @if ($bankChannels->isNotEmpty())
+                                            <small class="text-muted d-block mb-1">Transfer Bank (biaya admin Rp {{ number_format($paymentFees['bank'] ?? 2500, 0, ',', '.') }})</small>
+                                            @foreach ($bankChannels as $channel)
+                                                <div class="small mb-2">
+                                                    <strong>{{ $channel['name'] }}</strong><br>
+                                                    {{ $channel['number'] }}<br>
+                                                    a.n. {{ $channel['holder'] }}
+                                                </div>
+                                            @endforeach
+                                        @endif
+
+                                        @if ($ewalletChannels->isNotEmpty())
+                                            <small class="text-muted d-block mb-1 mt-2">E-Wallet (biaya admin Rp {{ number_format($paymentFees['ewallet'] ?? 1200, 0, ',', '.') }})</small>
+                                            @foreach ($ewalletChannels as $channel)
+                                                <div class="small mb-2">
+                                                    <strong>{{ $channel['name'] }}</strong><br>
+                                                    {{ $channel['number'] }}<br>
+                                                    a.n. {{ $channel['holder'] }}
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                    @else
+                                        <small class="text-muted d-block">
+                                            Rekening/e-wallet belum dicantumkan. Pembayaran dilakukan setelah konfirmasi via WhatsApp admin.
+                                        </small>
+                                    @endif
                                 </div>
                             </div>
                         </div>
@@ -285,7 +336,47 @@
                     </div>
 
                     <div class="alert alert-info py-2 mb-0">
-                        <small>Silakan pilih metode pembayaran:</small>
+                        <small>Pilih metode dan kanal pembayaran untuk melihat total transfer final.</small>
+                    </div>
+
+                    <div class="mt-3">
+                        <label class="form-label fw-bold mb-2">Pilih Kanal Pembayaran</label>
+                        <select id="confirm-payment-channel" class="form-select">
+                            <option value="">-- Pilih metode pembayaran --</option>
+                            @if ($gatewayChannels->isNotEmpty())
+                                <optgroup label="Auto Payment Gateway">
+                                    @foreach ($gatewayChannels as $channel)
+                                        <option value="{{ $channel['id'] }}">{{ $channel['name'] }} - otomatis terverifikasi</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                            @if ($bankChannels->isNotEmpty())
+                                <optgroup label="Transfer Bank (Biaya Admin Rp {{ number_format($paymentFees['bank'] ?? 2500, 0, ',', '.') }})">
+                                    @foreach ($bankChannels as $channel)
+                                        <option value="{{ $channel['id'] }}">{{ $channel['name'] }} - {{ $channel['number'] }} ({{ $channel['holder'] }})</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                            @if ($ewalletChannels->isNotEmpty())
+                                <optgroup label="E-Wallet (Biaya Admin Rp {{ number_format($paymentFees['ewallet'] ?? 1200, 0, ',', '.') }})">
+                                    @foreach ($ewalletChannels as $channel)
+                                        <option value="{{ $channel['id'] }}">{{ $channel['name'] }} - {{ $channel['number'] }} ({{ $channel['holder'] }})</option>
+                                    @endforeach
+                                </optgroup>
+                            @endif
+                        </select>
+                        <small class="text-muted d-block mt-2" id="confirm-channel-note">Biaya admin akan dihitung otomatis sesuai metode pembayaran.</small>
+                    </div>
+
+                    <div class="mt-3 small">
+                        <div class="d-flex justify-content-between">
+                            <span>Biaya Admin</span>
+                            <strong id="confirm-admin-fee">Rp 0</strong>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <span>Total Transfer Sekarang</span>
+                            <strong id="confirm-transfer-total">Rp 0</strong>
+                        </div>
                     </div>
                 </div>
                 <div class="modal-footer d-flex flex-column gap-2">
@@ -805,8 +896,11 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const paymentChannels = @json($paymentChannels->values());
+            const paymentFees = @json($paymentFees);
             let selectedPackage = null;
             let selectedAddons = [];
+            let selectedPaymentChannelId = '';
             let isConfirmedSubmit = false;
             let lastTotals = { packageSubtotal: 0, addonsTotal: 0, grandTotal: 0, quantity: 0, unitLabel: 'unit' };
 
@@ -819,6 +913,36 @@
             // Format Rupiah Helper
             function formatRupiah(number) {
                 return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(number));
+            }
+
+            function getPaymentChannelById(channelId) {
+                return paymentChannels.find(channel => channel.id === channelId) || null;
+            }
+
+            function getAdminFeeByChannel(channelId) {
+                const channel = getPaymentChannelById(channelId);
+                if (!channel) {
+                    return 0;
+                }
+
+                if (channel.type === 'ewallet') {
+                    return Number(paymentFees.ewallet || 1200);
+                }
+
+                return Number(paymentFees.bank || 2500);
+            }
+
+            function updateConfirmPaymentAmounts(paymentChoice = null) {
+                const selectedChoice = paymentChoice || document.getElementById('payment-choice-input').value || 'full';
+                const baseAmount = selectedChoice === 'dp' ? (lastTotals.grandTotal * 0.5) : lastTotals.grandTotal;
+                const adminFee = getAdminFeeByChannel(selectedPaymentChannelId);
+                const transferNow = baseAmount + adminFee;
+
+                document.getElementById('confirm-admin-fee').textContent = formatRupiah(adminFee);
+                document.getElementById('confirm-transfer-total').textContent = formatRupiah(transferNow);
+
+                document.getElementById('confirm-dp').textContent = formatRupiah((lastTotals.grandTotal * 0.5) + adminFee);
+                document.getElementById('confirm-full').textContent = formatRupiah(lastTotals.grandTotal + adminFee);
             }
 
             // PRICING CARD SELECTION
@@ -1068,21 +1192,52 @@
                 }
 
                 document.getElementById('confirm-total').textContent = formatRupiah(lastTotals.grandTotal);
-                document.getElementById('confirm-dp').textContent = formatRupiah(lastTotals.grandTotal * 0.5);
-                document.getElementById('confirm-full').textContent = formatRupiah(lastTotals.grandTotal);
+                updateConfirmPaymentAmounts('full');
 
                 const modal = new bootstrap.Modal(document.getElementById('orderConfirmModal'));
                 modal.show();
             }
 
+            document.getElementById('confirm-payment-channel').addEventListener('change', function() {
+                selectedPaymentChannelId = this.value;
+                document.getElementById('payment-channel-input').value = selectedPaymentChannelId;
+
+                const selectedChannel = getPaymentChannelById(selectedPaymentChannelId);
+                if (selectedChannel) {
+                    if (selectedChannel.type === 'gateway') {
+                        document.getElementById('confirm-channel-note').textContent = `${selectedChannel.name} - pembayaran akan diproses otomatis dan status ter-update real-time.`;
+                    } else {
+                        document.getElementById('confirm-channel-note').textContent = `${selectedChannel.name} - ${selectedChannel.number} a.n. ${selectedChannel.holder}`;
+                    }
+                } else {
+                    document.getElementById('confirm-channel-note').textContent = 'Biaya admin akan dihitung otomatis sesuai metode pembayaran.';
+                }
+
+                updateConfirmPaymentAmounts();
+            });
+
             document.getElementById('pay-dp-btn').addEventListener('click', function() {
+                if (!selectedPaymentChannelId) {
+                    alert('Silakan pilih kanal pembayaran terlebih dahulu.');
+                    return;
+                }
+
                 document.getElementById('payment-choice-input').value = 'dp';
+                document.getElementById('payment-channel-input').value = selectedPaymentChannelId;
+                updateConfirmPaymentAmounts('dp');
                 isConfirmedSubmit = true;
                 document.getElementById('checkout-form').submit();
             });
 
             document.getElementById('pay-full-btn').addEventListener('click', function() {
+                if (!selectedPaymentChannelId) {
+                    alert('Silakan pilih kanal pembayaran terlebih dahulu.');
+                    return;
+                }
+
                 document.getElementById('payment-choice-input').value = 'full';
+                document.getElementById('payment-channel-input').value = selectedPaymentChannelId;
+                updateConfirmPaymentAmounts('full');
                 isConfirmedSubmit = true;
                 document.getElementById('checkout-form').submit();
             });

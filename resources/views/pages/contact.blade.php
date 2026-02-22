@@ -26,8 +26,8 @@
                             <div class="mb-4">
                                 <h6><i class="bi bi-whatsapp text-success"></i> WhatsApp</h6>
                                 <p class="text-muted">
-                                    <a href="https://wa.me/6288991796535" target="_blank" class="text-decoration-none">
-                                        +62 88991796535
+                                        <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="text-decoration-none">
+                                            {{ config('app.whatsapp_display') }}
                                     </a>
                                 </p>
                                 <small class="text-muted">Response time: Kurang dari 1 jam</small>
@@ -132,7 +132,7 @@
                     <p class="lead">Hubungi kami melalui WhatsApp untuk respons instan dan konsultasi gratis!</p>
                 </div>
                 <div class="col-md-6 text-md-end">
-                    <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success btn-lg">
+                        <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="btn btn-success btn-lg">
                         <i class="bi bi-whatsapp"></i> Chat WhatsApp Sekarang
                     </a>
                 </div>

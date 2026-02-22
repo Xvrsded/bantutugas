@@ -5,9 +5,77 @@ namespace App\Http\Controllers;
 use App\Models\Order;
 use App\Models\Service;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Log;
 
 class OrderController extends Controller
 {
+    public function handlePaymentWebhook(Request $request)
+    {
+        $payload = $request->all();
+        $serverKey = (string) config('services.midtrans.server_key');
+
+        if ($serverKey !== '' && isset($payload['signature_key'], $payload['order_id'], $payload['status_code'], $payload['gross_amount'])) {
+            $expectedSignature = hash(
+                'sha512',
+                $payload['order_id'] . $payload['status_code'] . $payload['gross_amount'] . $serverKey
+            );
+
+            if (!hash_equals($expectedSignature, (string) $payload['signature_key'])) {
+                return response()->json(['success' => false, 'message' => 'Invalid signature'], 401);
+            }
+
+            $order = Order::where('payment_reference', $payload['order_id'])->first();
+            if (!$order) {
+                return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+            }
+
+            $transactionStatus = (string) ($payload['transaction_status'] ?? '');
+            $fraudStatus = (string) ($payload['fraud_status'] ?? '');
+
+            $isPaid = $transactionStatus === 'settlement' || ($transactionStatus === 'capture' && $fraudStatus === 'accept');
+
+            $order->update([
+                'payment_status' => $isPaid ? 'paid' : 'waiting',
+                'paid_at' => $isPaid ? now() : null,
+            ]);
+
+            Log::info('Midtrans webhook processed', [
+                'order_id' => $order->id,
+                'payment_reference' => $payload['order_id'],
+                'transaction_status' => $transactionStatus,
+                'is_paid' => $isPaid,
+            ]);
+
+            return response()->json(['success' => true]);
+        }
+
+        $secret = (string) env('PAYMENT_WEBHOOK_SECRET', '');
+        if ($secret !== '' && $request->header('X-Payment-Secret') === $secret) {
+            $validated = $request->validate([
+                'order_id' => 'required|integer|exists:orders,id',
+                'payment_status' => 'required|in:paid,failed,pending',
+            ]);
+
+            $order = Order::findOrFail($validated['order_id']);
+            $isPaid = $validated['payment_status'] === 'paid';
+
+            $order->update([
+                'payment_status' => $isPaid ? 'paid' : 'waiting',
+                'paid_at' => $isPaid ? now() : null,
+            ]);
+
+            Log::info('Generic webhook processed', [
+                'order_id' => $order->id,
+                'is_paid' => $isPaid,
+            ]);
+
+            return response()->json(['success' => true]);
+        }
+
+        return response()->json(['success' => false, 'message' => 'Unauthorized'], 401);
+    }
+
     public function create(Service $service)
     {
         return view('order.create', compact('service'));
@@ -85,6 +153,7 @@ class OrderController extends Controller
             'unit_quantity' => 'required|integer|min:1',
             'selected_addons' => 'nullable',
             'payment_choice' => 'required|in:dp,full',
+            'payment_channel' => 'required|string',
             'name' => 'required|string|max:255',
             'email' => 'required|email|max:255',
             'whatsapp' => 'required|string|max:20',
@@ -92,6 +161,14 @@ class OrderController extends Controller
             'notes' => 'required|string|max:2000',
             'attachment' => 'required|file|max:10240|mimes:pdf,doc,docx,jpg,jpeg,png,zip,rar',
         ]);
+
+        $paymentChannel = $this->findPaymentChannel($validated['payment_channel']);
+        if (!$paymentChannel) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Metode pembayaran tidak valid. Silakan pilih ulang metode pembayaran.'
+            ], 422);
+        }
 
         // Get package and service
         $package = \App\Models\Package::findOrFail($validated['package_id']);
@@ -125,12 +202,21 @@ class OrderController extends Controller
             }
         }
 
+        // Calculate add-ons estimate for payment calculation
+        if (!empty($selectedAddons)) {
+            foreach ($selectedAddons as $addon) {
+                $addonsTotal += (float) ($addon['price'] ?? 0);
+            }
+        }
+
         // Calculate final total and payment
         $finalTotal = $packageSubtotal + $addonsTotal;
         $paymentChoice = $validated['payment_choice'];
         $dpPercentage = $paymentChoice === 'dp' ? 50 : 100;
-        $dpAmount = $paymentChoice === 'dp' ? $finalTotal * 0.5 : $finalTotal;
-        $remainingAmount = $paymentChoice === 'dp' ? $finalTotal - $dpAmount : 0;
+        $selectedPaymentAmount = $paymentChoice === 'dp' ? $finalTotal * 0.5 : $finalTotal;
+        $paymentAdminFee = $this->getPaymentAdminFee($paymentChannel['type'] ?? 'bank');
+        $dpAmount = $selectedPaymentAmount + $paymentAdminFee;
+        $remainingAmount = $paymentChoice === 'dp' ? $finalTotal - $selectedPaymentAmount : 0;
 
         // Create order
         $order = Order::create([
@@ -149,15 +235,21 @@ class OrderController extends Controller
             'package_price' => $packageSubtotal,
             'addons_total' => 0, // Will be updated when addons are linked
             'subtotal' => $packageSubtotal,
-            'payment_method' => $paymentChoice === 'dp' ? 'dp_50' : 'full',
+            'payment_method' => $validated['payment_channel'],
+            'payment_gateway' => $paymentChannel['type'] === 'gateway' ? 'midtrans' : null,
+            'payment_reference' => null,
             'payment_choice' => $paymentChoice,
+            'payment_status' => 'waiting',
             'dp_percentage' => $dpPercentage,
             'dp_amount' => $dpAmount,
             'remaining_amount' => $remainingAmount,
+            'payment_admin_fee' => $paymentAdminFee,
+            'payment_total_due' => $dpAmount,
             'is_notified' => false
         ]);
 
         // Attach add-ons and calculate total
+        $addonsTotal = 0;
         if (!empty($selectedAddons)) {
             foreach ($selectedAddons as $addon) {
                 $addonModel = \App\Models\Addon::findOrFail($addon['id']);
@@ -168,17 +260,37 @@ class OrderController extends Controller
             }
         }
 
-        // Update order with final amounts
+        // Update order with final amounts (recalculate to keep consistency)
+        $finalTotal = $packageSubtotal + $addonsTotal;
+        $selectedPaymentAmount = $paymentChoice === 'dp' ? $finalTotal * 0.5 : $finalTotal;
+        $paymentTotalDue = $selectedPaymentAmount + $paymentAdminFee;
+
         $order->update([
             'addons_total' => $addonsTotal,
             'subtotal' => $finalTotal,
             'final_price' => $finalTotal,
+            'dp_amount' => $paymentTotalDue,
+            'remaining_amount' => $paymentChoice === 'dp' ? $finalTotal - $selectedPaymentAmount : 0,
+            'payment_total_due' => $paymentTotalDue,
             'budget' => $finalTotal // For legacy compatibility
         ]);
 
         // Send notification
         $this->sendPackageCheckoutNotification($order);
 
+        if (($paymentChannel['type'] ?? null) === 'gateway') {
+            $midtrans = $this->createMidtransTransaction($order);
+
+            if (!$midtrans['success'] || empty($midtrans['redirect_url'])) {
+                return redirect()->route('order.success', $order)->with('success', 'Pesanan dibuat, namun pembayaran otomatis belum tersedia. Lanjutkan pembayaran via WhatsApp.');
+            }
+
+            $order->update([
+                'payment_reference' => $midtrans['reference'],
+            ]);
+
+            return redirect()->away($midtrans['redirect_url']);
+        }
         if ($request->wantsJson()) {
             return response()->json([
                 'success' => true,
@@ -192,8 +304,12 @@ class OrderController extends Controller
 
     private function buildWhatsAppUrl(Order $order)
     {
-        $number = '6288991796535';
+        $number = preg_replace('/\D+/', '', (string) config('app.whatsapp_number', '6288991796535'));
         $paymentLabel = $order->payment_choice === 'dp' ? 'DP 50%' : 'FULL';
+        $paymentChannel = $this->findPaymentChannel((string) $order->payment_method);
+        $channelLabel = $paymentChannel
+            ? ($paymentChannel['name'] . ' - ' . $paymentChannel['number'] . ' a.n. ' . $paymentChannel['holder'])
+            : 'Lihat instruksi pembayaran di website';
         $dpText = $order->payment_choice === 'dp'
             ? "DP: Rp " . number_format($order->dp_amount, 0, ',', '.') . " | Sisa: Rp " . number_format($order->remaining_amount, 0, ',', '.')
             : "Pembayaran FULL";
@@ -204,7 +320,10 @@ class OrderController extends Controller
         $message .= "Paket: {$order->package->name}\n";
         $message .= "Jumlah: {$order->unit_quantity} {$order->package->unit_label}\n";
         $message .= "Total: Rp " . number_format($order->final_price, 0, ',', '.') . "\n";
+        $message .= "Biaya Admin: Rp " . number_format($order->payment_admin_fee ?? 0, 0, ',', '.') . "\n";
+        $message .= "Total Transfer: Rp " . number_format($order->payment_total_due ?? 0, 0, ',', '.') . "\n";
         $message .= "Metode: {$paymentLabel}\n";
+        $message .= "Kanal Bayar: {$channelLabel}\n";
         $message .= $dpText . "\n";
         $message .= "Deadline: {$order->deadline}\n";
         $message .= "Catatan: {$order->description}";
@@ -288,6 +407,7 @@ class OrderController extends Controller
                 'budget' => $calculation['calculated_price'] ?? ($item['price'] * $item['quantity']),
                 'quantity' => $item['quantity'],
                 'payment_method' => null,
+                'payment_status' => 'waiting',
                 'attachment' => $attachmentPath,
                 'status' => 'pending',
                 'notes' => 'Pesanan dari checkout legacy.',
@@ -411,5 +531,93 @@ class OrderController extends Controller
         foreach ($orders as $order) {
             $order->update(['is_notified' => true]);
         }
+    }
+
+    private function findPaymentChannel(string $channelId): ?array
+    {
+        $channels = config('payment.channels', []);
+
+        foreach ($channels as $channel) {
+            if (($channel['id'] ?? null) === $channelId) {
+                return $channel;
+            }
+        }
+
+        return null;
+    }
+
+    private function getPaymentAdminFee(string $channelType): float
+    {
+        $fees = config('payment.fees', []);
+        if ($channelType === 'ewallet') {
+            return (float) ($fees['ewallet'] ?? 1200);
+        }
+
+        if ($channelType === 'gateway') {
+            return (float) ($fees['gateway'] ?? 0);
+        }
+
+        return (float) ($fees['bank'] ?? 2500);
+    }
+
+    private function createMidtransTransaction(Order $order): array
+    {
+        $serverKey = (string) config('services.midtrans.server_key');
+        $isProduction = (bool) config('services.midtrans.is_production', false);
+
+        if ($serverKey === '') {
+            Log::warning('Midtrans server key is empty.');
+            return ['success' => false];
+        }
+
+        $baseUrl = $isProduction
+            ? 'https://app.midtrans.com/snap/v1/transactions'
+            : 'https://app.sandbox.midtrans.com/snap/v1/transactions';
+
+        $paymentReference = 'BTG-' . $order->id . '-' . now()->format('YmdHis');
+
+        $payload = [
+            'transaction_details' => [
+                'order_id' => $paymentReference,
+                'gross_amount' => (int) round((float) ($order->payment_total_due ?? 0)),
+            ],
+            'customer_details' => [
+                'first_name' => $order->client_name,
+                'email' => $order->client_email,
+                'phone' => $order->client_phone,
+            ],
+            'item_details' => [
+                [
+                    'id' => 'order-' . $order->id,
+                    'price' => (int) round((float) ($order->payment_total_due ?? 0)),
+                    'quantity' => 1,
+                    'name' => 'Pembayaran Order #' . $order->id,
+                ],
+            ],
+            'callbacks' => [
+                'finish' => route('order.success', $order),
+            ],
+        ];
+
+        $response = Http::withBasicAuth($serverKey, '')
+            ->acceptJson()
+            ->post($baseUrl, $payload);
+
+        if (!$response->successful()) {
+            Log::error('Midtrans create transaction failed', [
+                'order_id' => $order->id,
+                'response' => $response->body(),
+            ]);
+
+            return ['success' => false];
+        }
+
+        $data = $response->json();
+
+        return [
+            'success' => true,
+            'reference' => $paymentReference,
+            'redirect_url' => $data['redirect_url'] ?? '',
+        ];
     }
 }

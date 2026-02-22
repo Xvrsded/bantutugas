@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="700" viewBox="0 0 1200 700">
+  <defs>
+    <linearGradient id="bg" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0%" stop-color="#0f172a"/>
+      <stop offset="100%" stop-color="#1e40af"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="700" fill="url(#bg)"/>
+  <rect x="70" y="70" width="1060" height="560" rx="22" fill="#0b1220" stroke="#38bdf8" stroke-width="2"/>
+  <text x="120" y="170" fill="#e2e8f0" font-family="Segoe UI, Arial" font-size="48" font-weight="700">IoT Monitoring Dashboard</text>
+  <text x="120" y="220" fill="#93c5fd" font-family="Segoe UI, Arial" font-size="24">Real-time device telemetry · MQTT · Web dashboard</text>
+  <rect x="120" y="280" width="300" height="220" rx="16" fill="#111827" stroke="#22d3ee"/>
+  <rect x="450" y="280" width="300" height="220" rx="16" fill="#111827" stroke="#22d3ee"/>
+  <rect x="780" y="280" width="300" height="220" rx="16" fill="#111827" stroke="#22d3ee"/>
+  <text x="170" y="390" fill="#67e8f9" font-family="Segoe UI, Arial" font-size="28">Temp: 27.3°C</text>
+  <text x="500" y="390" fill="#67e8f9" font-family="Segoe UI, Arial" font-size="28">Humidity: 68%</text>
+  <text x="840" y="390" fill="#67e8f9" font-family="Segoe UI, Arial" font-size="28">Status: ONLINE</text>
+</svg>

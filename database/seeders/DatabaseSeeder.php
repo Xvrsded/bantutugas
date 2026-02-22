@@ -154,35 +154,35 @@ class DatabaseSeeder extends Seeder
 
         // Create Portfolio
         Portfolio::create([
-            'title' => 'Sistem Monitoring Suhu Real-time IoT',
+            'title' => 'IoT Automation Gates',
             'category' => 'iot',
-            'description' => 'Sistem monitoring suhu ruangan real-time menggunakan ESP32 dan web dashboard',
-            'image' => null,
+            'description' => 'Sistem IoT automation gates menggunakan RFID untuk akses gerbang otomatis dengan monitoring status perangkat secara real-time.',
+            'image' => 'portfolio-images/IoT1.jpg|portfolio-images/IoT2.jpg',
             'client_name' => 'PT Teknologi Maju',
             'project_url' => '#',
-            'technologies' => json_encode(['ESP32', 'Firebase', 'React', 'Arduino IDE']),
+            'technologies' => json_encode(['ESP32', 'RFID', 'Firebase', 'Arduino IDE']),
             'is_featured' => true
         ]);
 
         Portfolio::create([
-            'title' => 'Website E-Learning untuk Universitas',
+            'title' => 'Website Monitoring Detak Jantung',
             'category' => 'programming',
-            'description' => 'Platform e-learning lengkap dengan fitur kelas, assignment, dan grading otomatis',
-            'image' => null,
+            'description' => 'Website monitoring detak jantung berbasis dashboard real-time untuk menampilkan data sensor secara akurat dan responsif.',
+            'image' => 'portfolio-images/websiteMonitoring.png|portfolio-images/websiteMonitoring2.png',
             'client_name' => 'Universitas Mitra',
             'project_url' => '#',
-            'technologies' => json_encode(['Laravel', 'Vue.js', 'MySQL', 'Docker']),
+            'technologies' => json_encode(['Laravel', 'MySQL', 'Chart.js', 'Bootstrap']),
             'is_featured' => true
         ]);
 
         Portfolio::create([
-            'title' => 'Skripsi IoT Smart Home',
-            'category' => 'academic',
-            'description' => 'Pendampingan penyelesaian skripsi tentang sistem smart home berbasis Arduino',
-            'image' => null,
-            'client_name' => 'Mahasiswa Teknik Elektro',
+            'title' => 'Design PCB',
+            'category' => 'pcb',
+            'description' => 'Perancangan design PCB dari skematik hingga layout siap produksi untuk kebutuhan prototipe dan implementasi perangkat elektronik.',
+            'image' => 'portfolio-images/DesignPCB1.png|portfolio-images/DesignPCB2.png',
+            'client_name' => 'Client Industri Elektronik',
             'project_url' => '#',
-            'technologies' => json_encode(['Arduino', 'Blynk', 'IoT', 'Dokumentasi']),
+            'technologies' => json_encode(['KiCad', 'Altium', 'Gerber', 'Soldering']),
             'is_featured' => true
         ]);
     }

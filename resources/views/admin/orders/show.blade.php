@@ -2,6 +2,64 @@
 
 @section('title', 'Detail Pesanan #' . $order->id)
 
+@php
+    $paymentChannel = collect(config('payment.channels', []))->firstWhere('id', (string) $order->payment_method);
+@endphp
+
+@section('extra-css')
+<style>
+    .detail-label {
+        font-size: 0.8rem;
+        text-transform: uppercase;
+        letter-spacing: 0.4px;
+        color: #6c757d;
+        margin-bottom: 0.25rem;
+    }
+
+    .detail-value {
+        font-weight: 600;
+        color: #1e3a5f;
+        margin-bottom: 1rem;
+    }
+
+    .quick-status-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.5rem;
+    }
+
+    .priority-chip {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.35rem;
+        padding: 0.32rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.78rem;
+        font-weight: 600;
+        border: 1px solid #d9e2ec;
+        background-color: #fff;
+        color: #4b5563;
+    }
+
+    .priority-chip.overdue {
+        border-color: #f5c2c7;
+        background-color: #fff5f5;
+        color: #b42318;
+    }
+
+    .contact-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.45rem;
+        margin-top: 0.55rem;
+    }
+
+    .contact-actions .btn {
+        font-size: 0.78rem;
+    }
+</style>
+@endsection
+
 @section('content')
     <div class="row mb-4">
         <div class="col-lg-8">
@@ -11,51 +69,58 @@
                     <h5 class="card-title">
                         <i class="bi bi-bag-check"></i> Detail Pesanan #{{ $order->id }}
                     </h5>
+                    <div class="mb-3">
+                        @if ($order->deadline && $order->deadline->isPast() && !in_array($order->status, ['completed', 'rejected'], true))
+                            <span class="priority-chip overdue"><i class="bi bi-exclamation-triangle"></i> Prioritas Tinggi - Overdue</span>
+                        @else
+                            <span class="priority-chip"><i class="bi bi-check2-circle"></i> Monitoring Normal</span>
+                        @endif
+                    </div>
                     <hr>
 
                     <div class="row mb-3">
                         <div class="col-md-6">
-                            <p class="mb-2">
-                                <strong>Nama Klien:</strong><br>
-                                {{ $order->client_name }}
-                            </p>
-                            <p class="mb-2">
-                                <strong>Email:</strong><br>
-                                <a href="mailto:{{ $order->client_email }}">{{ $order->client_email }}</a>
-                            </p>
-                            <p class="mb-2">
-                                <strong>WhatsApp:</strong><br>
+                            <div class="detail-label">Nama Klien</div>
+                            <div class="detail-value">{{ $order->client_name }}</div>
+
+                            <div class="detail-label">Email</div>
+                            <div class="detail-value"><a href="mailto:{{ $order->client_email }}">{{ $order->client_email }}</a></div>
+
+                            <div class="detail-label">WhatsApp</div>
+                            <div class="detail-value">
                                 <a href="https://wa.me/{{ preg_replace('/[^0-9]/', '', $order->client_phone) }}" target="_blank">
                                     {{ $order->client_phone }}
                                 </a>
-                            </p>
+                                <div class="contact-actions">
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyText('{{ $order->client_phone }}')">
+                                        <i class="bi bi-clipboard"></i> Salin WA
+                                    </button>
+                                    <button type="button" class="btn btn-outline-secondary btn-sm" onclick="copyText('{{ $order->client_email }}')">
+                                        <i class="bi bi-clipboard"></i> Salin Email
+                                    </button>
+                                </div>
+                            </div>
                         </div>
                         <div class="col-md-6">
-                            <p class="mb-2">
-                                <strong>Layanan:</strong><br>
-                                {{ $order->service->name }}
-                            </p>
-                            <p class="mb-2">
-                                <strong>Judul Proyek:</strong><br>
-                                {{ $order->project_title }}
-                            </p>
-                            <p class="mb-2">
-                                <strong>Status:</strong><br>
+                            <div class="detail-label">Layanan</div>
+                            <div class="detail-value">{{ optional($order->service)->name ?? '-' }}</div>
+
+                            <div class="detail-label">Judul Proyek</div>
+                            <div class="detail-value">{{ $order->project_title }}</div>
+
+                            <div class="detail-label">Status</div>
+                            <div class="detail-value">
                                 <span class="badge bg-{{ $order->status_badge }} fs-6">
                                     {{ ucfirst(str_replace('_', ' ', $order->status)) }}
                                 </span>
-                            </p>
+                            </div>
                         </div>
                     </div>
 
                     <hr>
 
-                    <p class="mb-3">
-                        <strong>Deskripsi Proyek:</strong><br>
-                        <div class="bg-light p-3 rounded">
-                            {{ nl2br($order->description) }}
-                        </div>
-                    </p>
+                    <div class="detail-label">Deskripsi Proyek</div>
+                    <div class="bg-light p-3 rounded mb-3">{!! nl2br(e($order->description)) !!}</div>
 
                     <div class="row">
                         <div class="col-md-6">
@@ -81,6 +146,71 @@
                                 @else
                                     <span class="text-muted">Belum ditentukan</span>
                                 @endif
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Subtotal:</strong><br>
+                                @if (!is_null($order->subtotal))
+                                    Rp {{ number_format($order->subtotal, 0, ',', '.') }}
+                                @else
+                                    <span class="text-muted">-</span>
+                                @endif
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Harga Final:</strong><br>
+                                @if (!is_null($order->admin_adjusted_price))
+                                    Rp {{ number_format($order->admin_adjusted_price, 0, ',', '.') }}
+                                @elseif (!is_null($order->final_price))
+                                    Rp {{ number_format($order->final_price, 0, ',', '.') }}
+                                @else
+                                    <span class="text-muted">Belum dihitung</span>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Kanal Pembayaran:</strong><br>
+                                @if ($paymentChannel)
+                                    {{ $paymentChannel['name'] }} - {{ $paymentChannel['number'] }}<br>
+                                    <small class="text-muted">a.n. {{ $paymentChannel['holder'] }}</small>
+                                @else
+                                    <span class="text-muted">Belum dipilih</span>
+                                @endif
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Status Pembayaran:</strong><br>
+                                <span class="badge bg-{{ ($order->payment_status ?? 'waiting') === 'paid' ? 'success' : 'secondary' }}">
+                                    {{ ($order->payment_status ?? 'waiting') === 'paid' ? 'Payment Success' : 'Waiting Payment' }}
+                                </span>
+                                @if ($order->paid_at)
+                                    <br><small class="text-muted">Paid at: {{ $order->paid_at->format('d/m/Y H:i') }}</small>
+                                @endif
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="row mt-2">
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Biaya Admin:</strong><br>
+                                Rp {{ number_format($order->payment_admin_fee ?? 0, 0, ',', '.') }}
+                            </p>
+                        </div>
+                        <div class="col-md-6">
+                            <p class="mb-2">
+                                <strong>Total Transfer Saat Ini:</strong><br>
+                                Rp {{ number_format($order->payment_total_due ?? 0, 0, ',', '.') }}
                             </p>
                         </div>
                     </div>
@@ -116,6 +246,20 @@
             <div class="card mb-4 sticky-top" style="top: 80px;">
                 <div class="card-body">
                     <h6 class="card-title">Update Status</h6>
+                    <div class="quick-status-grid mb-3">
+                        @foreach (['accepted' => 'Terima', 'in_progress' => 'Proses', 'completed' => 'Selesai', 'rejected' => 'Tolak'] as $quickStatus => $quickLabel)
+                            <form method="POST" action="{{ route('admin.orders.update-status', $order) }}">
+                                @csrf
+                                @method('PUT')
+                                <input type="hidden" name="status" value="{{ $quickStatus }}">
+                                <input type="hidden" name="notes" value="{{ $order->notes }}">
+                                <button type="submit" class="btn btn-outline-primary btn-sm w-100" {{ $order->status === $quickStatus ? 'disabled' : '' }}>
+                                    {{ $quickLabel }}
+                                </button>
+                            </form>
+                        @endforeach
+                    </div>
+
                     <form method="POST" action="{{ route('admin.orders.update-status', $order) }}">
                         @csrf
                         @method('PUT')
@@ -141,6 +285,23 @@
                             <i class="bi bi-save"></i> Simpan Perubahan
                         </button>
                     </form>
+
+                    <hr>
+                    <form method="POST" action="{{ route('admin.orders.update-payment-status', $order) }}">
+                        @csrf
+                        @method('PUT')
+                        <div class="mb-3">
+                            <label for="payment_status" class="form-label">Status Pembayaran</label>
+                            <select class="form-select" id="payment_status" name="payment_status" required>
+                                <option value="waiting" {{ ($order->payment_status ?? 'waiting') === 'waiting' ? 'selected' : '' }}>Waiting Payment</option>
+                                <option value="paid" {{ ($order->payment_status ?? 'waiting') === 'paid' ? 'selected' : '' }}>Payment Success</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-outline-success w-100">
+                            <i class="bi bi-cash-coin"></i> Update Pembayaran
+                        </button>
+                    </form>
                 </div>
             </div>
 
@@ -163,4 +324,16 @@
             </div>
         </div>
     </div>
+@endsection
+
+@section('extra-js')
+<script>
+    function copyText(value) {
+        if (!navigator.clipboard) {
+            return;
+        }
+
+        navigator.clipboard.writeText(value);
+    }
+</script>
 @endsection

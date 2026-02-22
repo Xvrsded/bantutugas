@@ -3,6 +3,14 @@
 @section('title', 'Pesanan Berhasil Dibuat')
 
 @section('content')
+    @php
+        $paymentChannels = collect(config('payment.channels', []));
+        $bankChannels = $paymentChannels->where('type', 'bank')->values();
+        $ewalletChannels = $paymentChannels->where('type', 'ewallet')->values();
+        $hasPaymentChannel = $paymentChannels->isNotEmpty();
+        $paymentFees = config('payment.fees', ['bank' => 2500, 'ewallet' => 1200]);
+    @endphp
+
     <section class="py-5 bg-light" style="min-height: 60vh; display: flex; align-items: center;">
         <div class="container">
             <div class="row">
@@ -49,13 +57,37 @@
                                 </small>
                             </div>
 
+                            <div class="alert alert-light border mb-4 text-start">
+                                <strong><i class="bi bi-wallet2"></i> Kanal Pembayaran Resmi</strong><br>
+                                @if ($hasPaymentChannel)
+                                    <small class="text-muted d-block mt-1 mb-2">Transfer Bank (biaya admin Rp {{ number_format($paymentFees['bank'] ?? 2500, 0, ',', '.') }})</small>
+                                    @foreach ($bankChannels as $channel)
+                                        <small class="d-block">{{ $channel['name'] }} - {{ $channel['number'] }} (a.n. {{ $channel['holder'] }})</small>
+                                    @endforeach
+
+                                    <small class="text-muted d-block mt-2 mb-2">E-Wallet (biaya admin Rp {{ number_format($paymentFees['ewallet'] ?? 1200, 0, ',', '.') }})</small>
+                                    @foreach ($ewalletChannels as $channel)
+                                        <small class="d-block">{{ $channel['name'] }} - {{ $channel['number'] }} (a.n. {{ $channel['holder'] }})</small>
+                                    @endforeach
+
+                                    <hr class="my-2">
+                                    <small class="text-muted d-block">
+                                        Tata cara bayar: pilih kanal pembayaran, transfer sesuai nominal yang dikonfirmasi admin, lalu kirim bukti transfer + nomor order ke WhatsApp.
+                                    </small>
+                                @else
+                                    <small class="text-muted">
+                                        Nomor rekening/e-wallet belum dicantumkan. Silakan lanjut chat WhatsApp untuk menerima instruksi pembayaran.
+                                    </small>
+                                @endif
+                            </div>
+
                             <div class="alert alert-success mb-4">
                                 <i class="bi bi-chat-left-dots"></i> <strong>Chat WhatsApp</strong><br>
                                 <small>Atau hubungi kami langsung melalui WhatsApp untuk respons lebih cepat</small>
                             </div>
 
                             <div class="d-grid gap-2">
-                                <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-success btn-lg">
+                                <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="btn btn-success btn-lg">
                                     <i class="bi bi-whatsapp"></i> Chat WhatsApp Sekarang
                                 </a>
                                 <a href="{{ route('home') }}" class="btn btn-outline-primary btn-lg">

@@ -113,7 +113,7 @@
         <div class="container text-center">
             <h2 class="mb-3">Ada pertanyaan tentang harga?</h2>
             <p class="lead mb-4">Hubungi kami untuk konsultasi dan quotation khusus</p>
-            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-light btn-lg">
+            <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="btn btn-light btn-lg">
                 <i class="bi bi-whatsapp"></i> Chat WhatsApp Sekarang
             </a>
         </div>

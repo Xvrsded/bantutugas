@@ -254,7 +254,7 @@
             <a href="{{ route('services') }}" class="btn btn-light btn-lg me-2">
                 <i class="bi bi-briefcase"></i> Jelajahi Layanan
             </a>
-            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-outline-light btn-lg">
+            <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="btn btn-outline-light btn-lg">
                 <i class="bi bi-whatsapp"></i> Chat WhatsApp
             </a>
         </div>

@@ -304,7 +304,7 @@
                 <div class="col-md-3 col-sm-6 footer-section mb-4">
                     <h5>Hubungi Kami</h5>
                     <p>
-                        <i class="bi bi-whatsapp"></i> <a href="https://wa.me/6288991796535" target="_blank">+62 88991796535</a>
+                        <i class="bi bi-whatsapp"></i> <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank">{{ config('app.whatsapp_display') }}</a>
                     </p>
                     <p>
                         <i class="bi bi-envelope"></i> <a href="mailto:support@bantutugas.com">support@bantutugas.com</a>

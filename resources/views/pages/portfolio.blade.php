@@ -28,12 +28,62 @@
                 @forelse ($portfolios as $portfolio)
                     <div class="col-md-6 col-lg-4 mb-4 portfolio-item" data-category="{{ $portfolio->category }}">
                         <div class="card h-100">
-                            @if ($portfolio->image)
-                                <img src="{{ asset('storage/' . $portfolio->image) }}" class="card-img-top" alt="{{ $portfolio->title }}" style="height: 250px; object-fit: cover;">
-                            @else
-                                <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 250px;">
-                                    <i class="bi bi-image text-muted" style="font-size: 4rem;"></i>
+                            @php
+                                $fallbackImages = match ($portfolio->category) {
+                                    'iot' => ['portfolio-images/IoT1.jpg', 'portfolio-images/IoT2.jpg'],
+                                    'programming', 'webmonitoring' => ['portfolio-images/websiteMonitoring.png', 'portfolio-images/websiteMonitoring2.png'],
+                                    'pcb' => ['portfolio-images/DesignPCB1.png', 'portfolio-images/DesignPCB2.png'],
+                                    default => ['portfolio-images/default-academic.svg'],
+                                };
+
+                                $images = $portfolio->image_list;
+                                if (count($images) === 0) {
+                                    $images = array_values(array_filter($fallbackImages, fn ($p) => file_exists(public_path($p))));
+                                    if (count($images) === 0) {
+                                        $images = ['portfolio-images/default-academic.svg'];
+                                    }
+                                }
+
+                                $toUrl = function ($path) {
+                                    if (str_starts_with($path, 'http://') || str_starts_with($path, 'https://')) {
+                                        return $path;
+                                    }
+
+                                    $path = ltrim($path, '/');
+
+                                    if (str_starts_with($path, 'portfolio-images/') || str_starts_with($path, 'pembayaran/') || str_starts_with($path, 'js/')) {
+                                        return asset($path);
+                                    }
+
+                                    if (str_starts_with($path, 'storage/')) {
+                                        return asset($path);
+                                    }
+
+                                    return asset('storage/' . $path);
+                                };
+
+                                $carouselId = 'portfolioCarousel' . $portfolio->id;
+                            @endphp
+                            @if (count($images) > 1)
+                                <div id="{{ $carouselId }}" class="carousel slide" data-bs-ride="carousel">
+                                    <div class="carousel-inner">
+                                        @foreach ($images as $index => $imagePath)
+                                            <div class="carousel-item {{ $index === 0 ? 'active' : '' }}">
+                                                <img src="{{ $toUrl($imagePath) }}" class="card-img-top" alt="{{ $portfolio->title }}" style="height: 250px; object-fit: cover;">
+                                            </div>
+                                        @endforeach
+                                    </div>
+                                    <button class="carousel-control-prev" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="prev">
+                                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Previous</span>
+                                    </button>
+                                    <button class="carousel-control-next" type="button" data-bs-target="#{{ $carouselId }}" data-bs-slide="next">
+                                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                        <span class="visually-hidden">Next</span>
+                                    </button>
                                 </div>
+                            @else
+                                <img src="{{ $toUrl($images[0]) }}" class="card-img-top" alt="{{ $portfolio->title }}" style="height: 250px; object-fit: cover;">
                             @endif
                             <div class="card-body">
                                 <h5 class="card-title">{{ $portfolio->title }}</h5>
@@ -71,7 +121,7 @@
         <div class="container text-center">
             <h2 class="mb-3">Ingin Proyek Seperti Ini?</h2>
             <p class="lead mb-4">Hubungi kami untuk mendiskusikan proyek Anda</p>
-            <a href="https://wa.me/6281234567890" target="_blank" class="btn btn-light btn-lg">
+            <a href="https://wa.me/{{ config('app.whatsapp_number') }}" target="_blank" class="btn btn-light btn-lg">
                 <i class="bi bi-whatsapp"></i> Hubungi Kami
             </a>
         </div>

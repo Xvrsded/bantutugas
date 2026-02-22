@@ -54,6 +54,18 @@ return [
 
     'url' => env('APP_URL', 'http://localhost'),
 
+    'whatsapp_number' => env('WHATSAPP_NUMBER', '6288991796535'),
+    'whatsapp_display' => env('WHATSAPP_DISPLAY', '+62 88991796535'),
+
+    'payment_accounts' => [
+        'bank_name' => env('PAYMENT_BANK_NAME'),
+        'bank_number' => env('PAYMENT_BANK_NUMBER'),
+        'bank_holder' => env('PAYMENT_BANK_HOLDER'),
+        'ewallet_name' => env('PAYMENT_EWALLET_NAME'),
+        'ewallet_number' => env('PAYMENT_EWALLET_NUMBER'),
+        'ewallet_holder' => env('PAYMENT_EWALLET_HOLDER'),
+    ],
+
     /*
     |--------------------------------------------------------------------------
     | Application Timezone

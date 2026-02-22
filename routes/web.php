@@ -24,6 +24,7 @@ Route::get('/order/success/{order}', [OrderController::class, 'success'])->name(
 // Checkout Routes
 Route::get('/checkout', [PageController::class, 'checkout'])->name('checkout');
 Route::post('/checkout/process', [OrderController::class, 'processCheckout'])->name('checkout.process');
+Route::post('/payment/webhook', [OrderController::class, 'handlePaymentWebhook'])->name('payment.webhook');
 
 // Admin Routes
 Route::middleware('auth')->prefix('admin')->group(function () {
@@ -33,6 +34,7 @@ Route::middleware('auth')->prefix('admin')->group(function () {
     Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders.index');
     Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
     Route::put('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.update-status');
+    Route::put('/orders/{order}/payment-status', [AdminOrderController::class, 'updatePaymentStatus'])->name('admin.orders.update-payment-status');
     Route::delete('/orders/{order}', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
 });
 
