@@ -8,16 +8,34 @@
         <div class="container">
             <h1 class="brand-title">Bantu Tugas</h1>
             <p class="tagline">Platform Jasa Akademik dan Konsultasi Teknologi Terpercaya</p>
-            <div class="mt-4">
-                <a href="{{ route('services') }}" class="btn btn-light btn-lg me-3">
+            <div class="mt-4 hero-cta-group">
+                <a href="{{ route('services') }}" class="btn btn-light btn-lg me-3 hero-cta-btn">
                     <i class="bi bi-briefcase"></i> Jelajahi Layanan
                 </a>
-                <a href="{{ route('how-to-order') }}" class="btn btn-outline-light btn-lg">
+                <a href="{{ route('how-to-order') }}" class="btn btn-outline-light btn-lg hero-cta-btn">
                     <i class="bi bi-question-circle"></i> Cara Pesan
                 </a>
             </div>
         </div>
     </section>
+
+    <style>
+        @media (max-width: 768px) {
+            .hero-cta-group {
+                display: flex;
+                flex-direction: column;
+                gap: 0.75rem;
+                align-items: stretch;
+            }
+
+            .hero-cta-group .hero-cta-btn {
+                width: 100%;
+                margin-right: 0 !important;
+                font-size: 0.95rem;
+                padding: 0.7rem 1rem;
+            }
+        }
+    </style>
 
     <!-- Trust & Introduction Section -->
     <section class="py-5">
