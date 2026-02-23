@@ -1,5 +1,7 @@
 <?php
 
+$midtransEnabled = (string) env('MIDTRANS_SERVER_KEY', '') !== '';
+
 return [
     'fees' => [
         'bank' => 2500,
@@ -7,15 +9,15 @@ return [
         'gateway' => 0,
     ],
 
-    'channels' => [
-        [
+    'channels' => array_values(array_filter([
+        $midtransEnabled ? [
             'id' => 'gateway_midtrans',
             'type' => 'gateway',
             'name' => 'Midtrans Auto Payment',
             'number' => '-',
             'holder' => 'Secure Gateway',
             'description' => 'Pembayaran otomatis (VA, QRIS, e-wallet, kartu) dengan status real-time.',
-        ],
+        ] : null,
         [
             'id' => 'bank_mandiri',
             'type' => 'bank',
@@ -65,5 +67,5 @@ return [
             'number' => '082110831473',
             'holder' => 'Guntur',
         ],
-    ],
+    ], static fn ($channel) => is_array($channel))),
 ];
