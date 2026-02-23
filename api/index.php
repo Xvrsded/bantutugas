@@ -12,6 +12,6 @@ try {
 		'message' => $exception->getMessage(),
 		'file' => $exception->getFile(),
 		'line' => $exception->getLine(),
-		'trace' => array_slice($exception->getTrace(), 0, 8),
+		'trace' => array_slice($exception->getTrace(), 0, 25),
 	], JSON_PRETTY_PRINT);
 }
