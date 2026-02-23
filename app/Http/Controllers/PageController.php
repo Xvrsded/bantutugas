@@ -9,6 +9,7 @@ use App\Models\Service;
 use App\Models\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Log;
 use Throwable;
 
 class PageController extends Controller
@@ -25,10 +26,19 @@ class PageController extends Controller
 
     public function home()
     {
-        $services = $this->fallbackCollection(fn () => Service::where('is_active', true)->take(6)->get());
-        $portfolios = $this->fallbackCollection(fn () => Portfolio::where('is_featured', true)->take(3)->get());
-        $testimonials = $this->fallbackCollection(fn () => Testimonial::approved()->latest()->get());
-        return view('pages.home', compact('services', 'portfolios', 'testimonials'));
+        try {
+            $services = $this->fallbackCollection(fn () => Service::where('is_active', true)->take(6)->get());
+            $portfolios = $this->fallbackCollection(fn () => Portfolio::where('is_featured', true)->take(3)->get());
+            $testimonials = $this->fallbackCollection(fn () => Testimonial::approved()->latest()->get());
+
+            return view('pages.home', compact('services', 'portfolios', 'testimonials'));
+        } catch (Throwable $exception) {
+            Log::error('Home page fallback triggered', [
+                'message' => $exception->getMessage(),
+            ]);
+
+            return response('Website online. Sedang ada gangguan sementara pada halaman utama.', 200);
+        }
     }
 
     public function services()
