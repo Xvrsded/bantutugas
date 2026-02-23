@@ -12,6 +12,12 @@ try {
 		'message' => $exception->getMessage(),
 		'file' => $exception->getFile(),
 		'line' => $exception->getLine(),
+		'previous' => $exception->getPrevious() ? [
+			'error' => get_class($exception->getPrevious()),
+			'message' => $exception->getPrevious()->getMessage(),
+			'file' => $exception->getPrevious()->getFile(),
+			'line' => $exception->getPrevious()->getLine(),
+		] : null,
 		'trace' => array_slice($exception->getTrace(), 0, 25),
 	], JSON_PRETTY_PRINT);
 }
