@@ -3,8 +3,6 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use Illuminate\Http\Request;
-use Symfony\Component\HttpFoundation\JsonResponse;
 use Illuminate\View\ViewServiceProvider;
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -22,13 +20,5 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
-        $exceptions->render(function (\Throwable $exception, Request $request) {
-            return new JsonResponse([
-                'status' => 'exception',
-                'error' => get_class($exception),
-                'message' => $exception->getMessage(),
-                'file' => $exception->getFile(),
-                'line' => $exception->getLine(),
-            ], method_exists($exception, 'getStatusCode') ? $exception->getStatusCode() : 500);
-        });
+        //
     })->create();

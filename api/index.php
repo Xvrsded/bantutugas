@@ -1,23 +1,25 @@
 <?php
 
-try {
-	require __DIR__ . '/../public/index.php';
-} catch (Throwable $exception) {
-	http_response_code(500);
-	header('Content-Type: application/json');
+$runtimeCacheDir = sys_get_temp_dir() . DIRECTORY_SEPARATOR . 'laravel-bootstrap-cache';
 
-	echo json_encode([
-		'status' => 'bootstrap_failed',
-		'error' => get_class($exception),
-		'message' => $exception->getMessage(),
-		'file' => $exception->getFile(),
-		'line' => $exception->getLine(),
-		'previous' => $exception->getPrevious() ? [
-			'error' => get_class($exception->getPrevious()),
-			'message' => $exception->getPrevious()->getMessage(),
-			'file' => $exception->getPrevious()->getFile(),
-			'line' => $exception->getPrevious()->getLine(),
-		] : null,
-		'trace' => array_slice($exception->getTrace(), 0, 25),
-	], JSON_PRETTY_PRINT);
+if (! is_dir($runtimeCacheDir)) {
+	@mkdir($runtimeCacheDir, 0777, true);
 }
+
+$cacheFiles = [
+	'APP_PACKAGES_CACHE' => $runtimeCacheDir . DIRECTORY_SEPARATOR . 'packages.php',
+	'APP_SERVICES_CACHE' => $runtimeCacheDir . DIRECTORY_SEPARATOR . 'services.php',
+	'APP_CONFIG_CACHE' => $runtimeCacheDir . DIRECTORY_SEPARATOR . 'config.php',
+	'APP_ROUTES_CACHE' => $runtimeCacheDir . DIRECTORY_SEPARATOR . 'routes.php',
+	'APP_EVENTS_CACHE' => $runtimeCacheDir . DIRECTORY_SEPARATOR . 'events.php',
+];
+
+foreach ($cacheFiles as $key => $value) {
+	if (getenv($key) === false || getenv($key) === '') {
+		putenv($key . '=' . $value);
+		$_ENV[$key] = $value;
+		$_SERVER[$key] = $value;
+	}
+}
+
+require __DIR__ . '/../public/index.php';
