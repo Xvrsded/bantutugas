@@ -10,5 +10,8 @@ try {
 		'status' => 'bootstrap_failed',
 		'error' => get_class($exception),
 		'message' => $exception->getMessage(),
+		'file' => $exception->getFile(),
+		'line' => $exception->getLine(),
+		'trace' => array_slice($exception->getTrace(), 0, 8),
 	], JSON_PRETTY_PRINT);
 }
