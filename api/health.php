@@ -27,6 +27,7 @@ $db = [
     'configured' => 'NO',
     'connect' => 'SKIPPED',
     'error' => null,
+    'counts' => null,
 ];
 
 $host = getenv('DB_HOST') ?: '';
@@ -59,6 +60,20 @@ if ($host !== '' && $name !== '' && $user !== '') {
         ]);
         $pdo->query('SELECT 1');
         $db['connect'] = 'OK';
+
+        try {
+            $db['counts'] = [
+                'services' => (int) $pdo->query('SELECT COUNT(*) FROM services')->fetchColumn(),
+                'active_services' => (int) $pdo->query('SELECT COUNT(*) FROM services WHERE is_active = 1')->fetchColumn(),
+                'portfolios' => (int) $pdo->query('SELECT COUNT(*) FROM portfolios')->fetchColumn(),
+                'featured_portfolios' => (int) $pdo->query('SELECT COUNT(*) FROM portfolios WHERE is_featured = 1')->fetchColumn(),
+                'testimonials' => (int) $pdo->query('SELECT COUNT(*) FROM testimonials')->fetchColumn(),
+            ];
+        } catch (Throwable $exception) {
+            $db['counts'] = [
+                'error' => $exception->getMessage(),
+            ];
+        }
     } catch (Throwable $exception) {
         $db['connect'] = 'FAILED';
         $db['error'] = $exception->getMessage();
