@@ -35,6 +35,19 @@ $name = getenv('DB_DATABASE') ?: '';
 $user = getenv('DB_USERNAME') ?: '';
 $pass = getenv('DB_PASSWORD') ?: '';
 
+$dbUrl = getenv('DB_URL') ?: '';
+if (($host === '' || $name === '' || $user === '') && $dbUrl !== '') {
+    $parsedUrl = parse_url($dbUrl);
+
+    if (is_array($parsedUrl)) {
+        $host = $host !== '' ? $host : ($parsedUrl['host'] ?? '');
+        $port = $port !== '3306' ? $port : (string) ($parsedUrl['port'] ?? '3306');
+        $name = $name !== '' ? $name : ltrim((string) ($parsedUrl['path'] ?? ''), '/');
+        $user = $user !== '' ? $user : urldecode((string) ($parsedUrl['user'] ?? ''));
+        $pass = $pass !== '' ? $pass : urldecode((string) ($parsedUrl['pass'] ?? ''));
+    }
+}
+
 if ($host !== '' && $name !== '' && $user !== '') {
     $db['configured'] = 'YES';
 
@@ -61,4 +74,11 @@ echo json_encode([
     ],
     'env' => $env,
     'db' => $db,
+    'db_source' => [
+        'db_url_present' => $dbUrl !== '' ? 'YES' : 'NO',
+        'host' => $host !== '' ? 'OK' : 'MISSING',
+        'port' => $port !== '' ? 'OK' : 'MISSING',
+        'database' => $name !== '' ? 'OK' : 'MISSING',
+        'username' => $user !== '' ? 'OK' : 'MISSING',
+    ],
 ], JSON_PRETTY_PRINT);
