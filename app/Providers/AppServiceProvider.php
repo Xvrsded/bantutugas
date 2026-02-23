@@ -2,7 +2,6 @@
 
 namespace App\Providers;
 
-use Illuminate\View\ViewServiceProvider;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -12,9 +11,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        if (! $this->app->bound('view')) {
-            $this->app->register(ViewServiceProvider::class);
-        }
+        //
     }
 
     /**
