@@ -8,6 +8,10 @@
   },
   "routes": [
     {
+      "src": "/__health",
+      "dest": "/api/health.php"
+    },
+    {
       "src": "/build/(.*)",
       "dest": "/public/build/$1"
     },
