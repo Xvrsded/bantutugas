@@ -5,8 +5,25 @@ use App\Http\Controllers\PageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\AdminOrderController;
+use Illuminate\Support\Facades\Response;
 
 // Public Routes
+Route::get('/pembayaran/{filename}', function (string $filename) {
+    $path = public_path('pembayaran/' . basename($filename));
+
+    abort_unless(file_exists($path), 404);
+
+    return Response::file($path);
+})->where('filename', '[A-Za-z0-9._-]+');
+
+Route::get('/portfolio-images/{filename}', function (string $filename) {
+    $path = public_path('portfolio-images/' . basename($filename));
+
+    abort_unless(file_exists($path), 404);
+
+    return Response::file($path);
+})->where('filename', '[A-Za-z0-9._-]+');
+
 Route::get('/', [PageController::class, 'home'])->name('home');
 Route::get('/services', [PageController::class, 'services'])->name('services');
 Route::get('/portfolio', [PageController::class, 'portfolio'])->name('portfolio');

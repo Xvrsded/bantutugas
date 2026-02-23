@@ -16,6 +16,14 @@
       "dest": "/api/health.php"
     },
     {
+      "src": "/pembayaran/(.*)",
+      "dest": "/api/index.php"
+    },
+    {
+      "src": "/portfolio-images/(.*)",
+      "dest": "/api/index.php"
+    },
+    {
       "src": "/build/(.*)",
       "dest": "/public/build/$1"
     },
